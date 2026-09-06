@@ -14,16 +14,9 @@
 
 #include <engine/input/input_handler.h>
 
-#include <engine/render/frame_controller.h>
-#include <engine/render/renderer.h>
+#include <engine/engine.h>
 
-#include <engine/resource/resource_manager.h>
-
-#include <engine/sound/audio_device.h>
-
-#include <engine/util/timer.h>
-
-#include <iostream>
+#include <ranges>
 
 enum class Action {
     Up = 0,
@@ -34,7 +27,7 @@ enum class Action {
     Count
 };
 
-int main() {
+int main(int argc, char** argv) {
     backend::GLFWWindow window(100, 100, "SWINGALING");
     backend::GLFWInputProvider inputProvider(window);
     backend::OpenGLGraphicsDevice device;
@@ -51,59 +44,40 @@ int main() {
         .window = window,
     };
 
-    engine::FrameController frameController(backend);
-    engine::InputHandler<Action> input(backend);
-    engine::Renderer renderer(backend);
-    engine::ResourceManager resourceManager(backend);
-    engine::AudioDevice audio(backend);
+    engine::Engine engine(backend);
 
+    engine.frameController().timer().setLimit(165);
+
+    engine::InputHandler<Action> input(backend);
     input.setKeybind(Action::Up, engine::Key::W);
     input.setKeybind(Action::Down, engine::Key::S);
     input.setKeybind(Action::Left, engine::Key::A);
     input.setKeybind(Action::Right, engine::Key::D);
 
-    backend::Camera2D camera;
+    engine::Font font = engine.resourceManager().createFont({"/usr/share/fonts/liberation", "LiberationSans-Regular.ttf"}, 24);
 
-    frameController.setCamera(camera);
-    frameController.timer().setLimit(165);
-
-    engine::Sound intro = resourceManager.createSound({"/home/jannik/Downloads", "intro.wav"});
-    engine::Font font = resourceManager.createFont({"/usr/share/fonts/liberation", "LiberationSans-Regular.ttf"}, 24);
-
-    engine::Sprite rat(resourceManager.createTexture({"/home/jannik/Downloads", "rat.png"}));
-
-    audio.play(intro);
+    engine::Sprite rat(engine.resourceManager().createTexture({"/home/jannik/Downloads", "rat.png"}));
 
     math::Vec2 playerPosition = math::Vec2::Zero();
 
-    frameController.timer().start();
-    while (!window.shouldClose()) {
-        frameController.execute(
-            [&](float dt) {
-                input.update();
+    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&input, &playerPosition](engine::Engine& engine, float dt) {
+        input.update();
 
-                if (input.isDown(Action::Up)) playerPosition.y += 10.0f * dt;
-                if (input.isDown(Action::Down)) playerPosition.y -= 10.0f * dt;
-                if (input.isDown(Action::Left)) playerPosition.x -= 10.0f * dt;
-                if (input.isDown(Action::Right)) playerPosition.x += 10.0f * dt;
+        if (input.isDown(Action::Up)) playerPosition.y += 10.0f * dt;
+        if (input.isDown(Action::Down)) playerPosition.y -= 10.0f * dt;
+        if (input.isDown(Action::Left)) playerPosition.x -= 10.0f * dt;
+        if (input.isDown(Action::Right)) playerPosition.x += 10.0f * dt;
 
-                camera.position = playerPosition;
+        engine.camera().position = playerPosition;
+    });
 
-                audio.update(dt);
-            },
-            [&](float dt) {
-                renderer.clear(math::Color::White);
-            },
-            [&](float dt) {
-                renderer.drawRect(math::Vec2::Zero(), math::Vec2::One(), math::Color::Blue);
-                renderer.drawSprite(rat, playerPosition, {1.0f, 1.5f});
-                renderer.drawText(font, "playa", {playerPosition.x, playerPosition.y + 1.0f}, 24, math::Color::Black, true);
-            },
-            [&](float dt) {
+    engine.setCallback(engine::Engine::WORLD_RENDER_CALLBACK, [font, rat, &playerPosition](engine::Engine& engine) {
+        engine::Renderer& renderer = engine.renderer();
 
-            }
-        );
-    }
+        renderer.drawRect(math::Vec2::Zero(), math::Vec2::One(), math::Color::Blue);
+        renderer.drawSprite(rat, playerPosition, {1.0f, 1.5f});
+        renderer.drawText(font, "playa", {playerPosition.x, playerPosition.y + 1.0f}, 24, math::Color::Black, true);
+    });
 
-    return 0;
+     return engine.main(argc, argv);
 }

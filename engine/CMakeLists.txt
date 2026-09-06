@@ -96,6 +96,8 @@ set(SOURCES
 
     src/util/resource_location.cpp
     src/util/unicode.cpp
+
+    src/engine.cpp
 )
 
 set(HEADERS
@@ -142,6 +144,7 @@ set(HEADERS
     include/engine/util/unicode.h
 
     include/engine/compile_options.h
+    include/engine/engine.h
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

@@ -1,0 +1,84 @@
+// Copyright 2026 Jannik Laugmand Bülow
+
+#ifndef UNNAMEDGAME_ENGINE_ENGINE_H
+#define UNNAMEDGAME_ENGINE_ENGINE_H
+
+#include "engine/backend/backend.h"
+
+#include "engine/render/frame_controller.h"
+#include "engine/render/renderer.h"
+
+#include "engine/resource/resource_manager.h"
+
+#include "engine/sound/audio_device.h"
+
+#include <array>
+#include <functional>
+#include <span>
+
+namespace engine {
+    class Engine {
+    public:
+        enum CallbackID {
+            UPDATE_CALLBACK = 0,
+            WORLD_RENDER_CALLBACK,
+            UI_RENDER_CALLBACK,
+
+            _count
+        };
+
+        explicit Engine(backend::Backend& backend);
+
+        backend::Backend& backend() const { return mBackend; }
+        backend::IAssetProvider& assetProvider() const { return mBackend.assetProvider; }
+        backend::IAudioDevice& audioBackend() const { return mBackend.audio; }
+        backend::IGraphicsDevice& gpu() const { return mBackend.gpu; }
+        backend::IInputProvider& inputProvider() const { return mBackend.inputProvider; }
+        backend::IRenderer& rendererBackend() const { return mBackend.renderer; }
+        backend::IWindow& window() const { return mBackend.window; }
+
+        FrameController& frameController() { return mFrameController; }
+        Renderer& renderer() { return mRenderer; }
+        ResourceManager& resourceManager() { return mResourceManager; }
+        AudioDevice& audioDevice() { return mAudioDevice; }
+
+        const FrameController& frameController() const { return mFrameController; }
+        const Renderer& renderer() const { return mRenderer; }
+        const ResourceManager& resourceManager() const { return mResourceManager; }
+        const AudioDevice& audioDevice() const { return mAudioDevice; }
+
+        Camera& camera() { return mCamera; }
+
+        void setBackgroundColor(math::Color color);
+
+        void setCallback(CallbackID id, std::function<void(Engine&)> callback) { setCallback(id, [callback = std::move(callback)](Engine& engine, float) { callback(engine); }); }
+        void setCallback(CallbackID id, std::function<void(Engine&, float)> callback);
+
+        int main(int argc, char** argv) {
+            std::vector<std::string_view> args;
+            args.reserve(argc - 1);
+            for (int i = 1; i < argc; i++) args.emplace_back(argv[i]);
+            return main(args);
+        }
+
+        int main(std::span<std::string_view> args); // engine entry point. does any required internal setup and starts the main loop using configured callbacks
+
+    private:
+        backend::Backend& mBackend;
+
+        FrameController mFrameController;
+        ResourceManager mResourceManager;
+        Renderer mRenderer;
+        AudioDevice mAudioDevice;
+
+        Camera mCamera;
+
+        math::Color mBackgroundColor;
+
+        std::array<std::function<void(Engine&, float)>, _count> mCallbacks{};
+
+        void call(CallbackID id, float dt);
+    };
+}
+
+#endif //UNNAMEDGAME_ENGINE_ENGINE_H
