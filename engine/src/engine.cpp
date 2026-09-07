@@ -3,12 +3,21 @@
 #include "engine/engine.h"
 
 namespace engine {
-    Engine::Engine(backend::Backend& backend)
+    Engine::Engine(const Config& config)
+        : mOwningBackend(config.realizeBackend())
+        , mBackend(mOwningBackend)
+        , mFrameController(mBackend)
+        , mResourceManager(mBackend)
+        , mRenderer(mBackend)
+        , mAudioDevice(mBackend)
+        , mBackgroundColor(math::Color::White) {}
+
+    Engine::Engine(const backend::Backend& backend)
         : mBackend(backend)
-        , mFrameController(backend)
-        , mResourceManager(backend)
-        , mRenderer(backend)
-        , mAudioDevice(backend)
+        , mFrameController(mBackend)
+        , mResourceManager(mBackend)
+        , mRenderer(mBackend)
+        , mAudioDevice(mBackend)
         , mBackgroundColor(math::Color::White) {}
 
     void Engine::setBackgroundColor(math::Color color) {

@@ -97,6 +97,7 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/config.cpp
     src/engine.cpp
 )
 
@@ -144,6 +145,7 @@ set(HEADERS
     include/engine/util/unicode.h
 
     include/engine/compile_options.h
+    include/engine/config.h
     include/engine/engine.h
 )
 

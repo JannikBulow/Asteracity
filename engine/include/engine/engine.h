@@ -12,6 +12,8 @@
 
 #include "engine/sound/audio_device.h"
 
+#include "engine/config.h"
+
 #include <array>
 #include <functional>
 #include <span>
@@ -27,9 +29,12 @@ namespace engine {
             _count
         };
 
-        explicit Engine(backend::Backend& backend);
+        explicit Engine(const Config& config);
 
-        backend::Backend& backend() const { return mBackend; }
+        // for advanced users and people who make their own backends
+        explicit Engine(const backend::Backend& backend);
+
+        backend::Backend& backend() { return mBackend; }
         backend::IAssetProvider& assetProvider() const { return mBackend.assetProvider; }
         backend::IAudioDevice& audioBackend() const { return mBackend.audio; }
         backend::IGraphicsDevice& gpu() const { return mBackend.gpu; }
@@ -64,7 +69,8 @@ namespace engine {
         int main(std::span<std::string_view> args); // engine entry point. does any required internal setup and starts the main loop using configured callbacks
 
     private:
-        backend::Backend& mBackend;
+        backend::OwningBackend mOwningBackend{};
+        backend::Backend mBackend;
 
         FrameController mFrameController;
         ResourceManager mResourceManager;
