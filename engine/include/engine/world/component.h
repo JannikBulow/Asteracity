@@ -84,6 +84,102 @@ namespace engine {
         }
     };
 
+    template<class... Components>
+    class ComponentView {
+        friend class Iterator;
+    public:
+        class Iterator {
+        public:
+            Iterator(ComponentView& view, size_t index)
+                : mView(view)
+                , mIndex(index) {
+                skipInvalid();
+            }
+
+            Iterator& operator++() {
+                ++mIndex;
+                skipInvalid();
+                return *this;
+            }
+
+            bool operator!=(const Iterator& other) const {
+                return mIndex != other.mIndex;
+            }
+
+            auto operator*() const {
+                Entity entity = mView.baseEntity(mIndex);
+                return std::tuple{
+                    entity,
+                    mView.template get<Components>(entity)...
+                };
+            }
+
+        private:
+            ComponentView& mView;
+            size_t mIndex;
+
+            void skipInvalid() {
+                while (mIndex < mView.mSize) {
+                    Entity entity = mView.baseEntity(mIndex);
+                    if (mView.isEligible(entity)) return;
+                    ++mIndex;
+                }
+            }
+        };
+
+        ComponentView(ComponentStorage<Components>&... storages)
+            : mStorages(&storages...) {
+            mBaseStorage = findSmallestStorage();
+            if (!mBaseStorage) throw util::GameException();
+            mSize = mBaseStorage->size();
+        }
+
+        bool isEligible(Entity entity) const {
+            return std::apply([&](auto*... storage) {
+                return (storage->contains(entity) && ...);
+            });
+        }
+
+        Iterator begin() {
+            return Iterator(*this, 0);
+        }
+
+        Iterator end() {
+            return Iterator(*this, mSize);
+        }
+
+    private:
+        std::tuple<ComponentStorage<Components>*...> mStorages;
+
+        IComponentStorage* mBaseStorage = nullptr;
+        size_t mSize = 0;
+
+        IComponentStorage* findSmallestStorage() {
+            size_t smallestSize = SIZE_MAX;
+
+            IComponentStorage* smallestStorage = nullptr;
+
+            std::apply([&](auto*... storage) {
+                ([&] {
+                    if (storage.size() < smallestSize) {
+                        smallestSize = storage.size();
+                        smallestStorage = storage;
+                    }
+                }(), ...);
+            }, mStorages);
+        }
+
+        Entity baseEntity(size_t index) {
+            return mBaseStorage->entityAt(index);
+        }
+
+        template<class T>
+        T& get(Entity entity) {
+            auto* storage = std::get<ComponentStorage<T>*>(mStorages);
+            return *storage->get(entity);
+        }
+    };
+
     using ComponentID = uint32_t;
 
     namespace internal {
@@ -122,6 +218,11 @@ namespace engine {
         template<class T>
         T* get(Entity entity) {
             return storage<T>().get(entity);
+        }
+
+        template<class... Components>
+        ComponentView<Components...> view() {
+            return ComponentView<Components...>(storage<Components>()...);
         }
 
     private:
