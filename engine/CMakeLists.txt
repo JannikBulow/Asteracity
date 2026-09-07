@@ -144,6 +144,7 @@ set(HEADERS
     include/engine/util/timer.h
     include/engine/util/unicode.h
 
+    include/engine/world/component.h
     include/engine/world/entity.h
 
     include/engine/compile_options.h
