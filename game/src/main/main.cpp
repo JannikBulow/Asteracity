@@ -28,27 +28,19 @@ enum class Action {
 };
 
 int main(int argc, char** argv) {
-    backend::GLFWWindow window(100, 100, "SWINGALING");
-    backend::GLFWInputProvider inputProvider(window);
-    backend::OpenGLGraphicsDevice device;
-    backend::OpenGLRenderer lowLevelRenderer(device, window);
-    backend::StbAssetProvider assetProvider;
-    backend::MiniaudioAudioDevice audioDevice;
-
-    backend::Backend backend = {
-        .assetProvider = assetProvider,
-        .audio = audioDevice,
-        .gpu = device,
-        .inputProvider = inputProvider,
-        .renderer = lowLevelRenderer,
-        .window = window,
-    };
-
-    engine::Engine engine(backend);
+    engine::Engine engine({
+        .window = {
+            .width = 100,
+            .height = 100,
+            .title = "UnnamedGame"
+        },
+        .graphicsBackend = engine::GraphicsBackend::OpenGL,
+        .audioBackend = engine::AudioBackend::Miniaudio
+    });
 
     engine.frameController().timer().setLimit(165);
 
-    engine::InputHandler<Action> input(backend);
+    engine::InputHandler<Action> input(engine.backend());
     input.setKeybind(Action::Up, engine::Key::W);
     input.setKeybind(Action::Down, engine::Key::S);
     input.setKeybind(Action::Left, engine::Key::A);
@@ -71,7 +63,7 @@ int main(int argc, char** argv) {
         engine.camera().position = playerPosition;
     });
 
-    engine.setCallback(engine::Engine::WORLD_RENDER_CALLBACK, [font, rat, &playerPosition](engine::Engine& engine) {
+    engine.setCallback(engine::Engine::WORLD_RENDER_CALLBACK, [&font, &rat, &playerPosition](engine::Engine& engine) {
         engine::Renderer& renderer = engine.renderer();
 
         renderer.drawRect(math::Vec2::Zero(), math::Vec2::One(), math::Color::Blue);
