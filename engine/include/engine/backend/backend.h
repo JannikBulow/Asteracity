@@ -10,6 +10,8 @@
 #include "engine/backend/renderer.h"
 #include "engine/backend/window.h"
 
+#include <memory>
+
 namespace backend {
     struct Backend {
         IAssetProvider& assetProvider;
@@ -18,6 +20,26 @@ namespace backend {
         IInputProvider& inputProvider;
         IRenderer& renderer;
         IWindow& window;
+    };
+
+    struct OwningBackend {
+        std::unique_ptr<IAssetProvider> assetProvider;
+        std::unique_ptr<IAudioDevice> audio;
+        std::unique_ptr<IGraphicsDevice> gpu;
+        std::unique_ptr<IInputProvider> inputProvider;
+        std::unique_ptr<IRenderer> renderer;
+        std::unique_ptr<IWindow> window;
+
+        operator Backend() const {
+            return {
+                .assetProvider = *assetProvider,
+                .audio = *audio,
+                .gpu = *gpu,
+                .inputProvider = *inputProvider,
+                .renderer = *renderer,
+                .window = *window,
+            };
+        }
     };
 }
 
