@@ -121,6 +121,42 @@ namespace util {
         std::vector<Slot> mValues;
         std::vector<uint32_t> mFreeList;
     };
+
+    template<class H>
+    class HandleStorage<void, H> {
+    public:
+        Handle<H> create() {
+            uint32_t index;
+
+            if (!mFreeList.empty()) {
+                index = mFreeList.back();
+                mFreeList.pop_back();
+            } else {
+                index = mGenerations.size();
+                mGenerations.push_back(0);
+            }
+
+            return {index, mGenerations[index]};
+        }
+
+        void destroy(Handle<H> handle) {
+            if (handle.index >= mGenerations.size()) throw GameException();
+
+            uint32_t& generation = mGenerations[handle.index];
+            if (generation != handle.generation) throw GameException();
+
+            generation += 1;
+            mFreeList.push_back(handle.index);
+        }
+
+        bool exists(Handle<H> handle) const {
+            return handle.index < mGenerations.size() && mGenerations[handle.index] == handle.generation;
+        }
+
+    private:
+        std::vector<uint32_t> mGenerations;
+        std::vector<uint32_t> mFreeList;
+    };
 }
 
 #endif //UNNAMEDGAME_ENGINE_UTIL_HANDLE_H
