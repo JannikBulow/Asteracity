@@ -86,12 +86,26 @@ namespace util {
             mFreeList.push_back(handle.index);
         }
 
+        bool exists(Handle<H> handle) const {
+            return handle.index < mValues.size() && mValues[handle.index].generation == handle.generation && mValues[handle.index].value.has_value();
+        }
+
         T& get(Handle<H> handle) {
             if (handle.index >= mValues.size()) throw GameException();
 
             Slot& slot = mValues[handle.index];
             if (slot.generation != handle.generation) throw GameException();
             if (!slot.value.has_value()) throw GameException();
+
+            return slot.value.value();
+        }
+
+        T* getNullable(Handle<H> handle) {
+            if (handle.index >= mValues.size()) return nullptr;
+
+            Slot& slot = mValues[handle.index];
+            if (slot.generation != handle.generation) return nullptr;
+            if (!slot.value.has_value()) return nullptr;
 
             return slot.value.value();
         }
