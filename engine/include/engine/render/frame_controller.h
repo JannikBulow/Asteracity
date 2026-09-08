@@ -16,19 +16,17 @@ namespace engine {
 
         explicit FrameController(backend::Backend& backend);
 
-        void setCamera(const Camera& camera);
-
         Timer& timer() { return mTimer; }
         const Timer& timer() const { return mTimer; }
 
         template<class F0, class F1, class F2, class F3>
-        void execute(F0&& preFrame, F1&& frameBegin, F2&& world, F3&& ui) {
+        void execute(const Camera& camera, F0&& preFrame, F1&& frameBegin, F2&& world, F3&& ui) {
             float dt = timer().tick();
             mBackend.window.pollEvents();
             preFrame(dt);
             beginFrame();
             frameBegin(dt);
-            beginWorld();
+            beginWorld(camera);
             world(dt);
             endWorld();
             beginUI();
@@ -39,13 +37,12 @@ namespace engine {
 
     private:
         backend::Backend& mBackend;
-        const Camera* mCamera;
         Timer mTimer;
 
         void beginFrame();
         void endFrame();
 
-        void beginWorld();
+        void beginWorld(const Camera& camera);
         void endWorld();
 
         void beginUI();

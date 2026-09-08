@@ -29,10 +29,10 @@ namespace engine {
     }
 
     int Engine::main(std::span<std::string_view> args) {
-        mFrameController.setCamera(mCamera);
         mFrameController.timer().start();
         while (!window().shouldClose()) {
             mFrameController.execute(
+                mCamera,
                 [this](float dt) {
                     call(UPDATE_CALLBACK, dt);
                     mAudioDevice.update(dt);

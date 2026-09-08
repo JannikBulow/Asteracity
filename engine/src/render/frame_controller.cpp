@@ -6,10 +6,6 @@ namespace engine {
     FrameController::FrameController(backend::Backend& backend)
         : mBackend(backend) {}
 
-    void FrameController::setCamera(const Camera& camera) {
-        mCamera = &camera;
-    }
-
     void FrameController::beginFrame() {
         mBackend.renderer.beginFrame();
     }
@@ -19,8 +15,8 @@ namespace engine {
         mTimer.waitForLimit();
     }
 
-    void FrameController::beginWorld() {
-        mBackend.renderer.beginWorld(*mCamera);
+    void FrameController::beginWorld(const Camera& camera) {
+        mBackend.renderer.beginWorld(camera);
     }
 
     void FrameController::endWorld() {
