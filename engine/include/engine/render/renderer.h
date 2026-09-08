@@ -21,7 +21,7 @@ namespace engine {
 
         void drawTexture(const Texture& texture, math::Vec2 position, math::Vec2 size, math::Color color = math::Color::White, float rotation = 0.0f, math::Rect uv = {0, 1, 1, 0});
 
-        void drawSprite(const Sprite& sprite, math::Vec2 position, math::Vec2 size, math::Color color = math::Color::White, float rotation = 0.0f);
+        void drawSprite(const Sprite& sprite, math::Vec2 position, math::Vec2 size, float rotation = 0.0f);
 
         void drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin = false);
         void drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, float spacing, float textLineSpacing, math::Color color, bool centerOrigin = false);
