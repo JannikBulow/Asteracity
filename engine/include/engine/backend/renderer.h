@@ -3,6 +3,8 @@
 #ifndef ASTERACITY_ENGINE_BACKEND_RENDERER_H
 #define ASTERACITY_ENGINE_BACKEND_RENDERER_H
 
+#include "engine/backend/graphics_device.h"
+
 #include "engine/util/math.h"
 #include "engine/util/unicode.h"
 
