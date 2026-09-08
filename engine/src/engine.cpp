@@ -35,9 +35,26 @@ namespace engine {
     }
 
     int Engine::main(std::span<std::string_view> args) {
+        std::string_view noSceneMessage = "Error: scene stack empty"; //TODO: default font, then render this text below in the mSceneStack.empty condition
+
         mFrameController.timer().start();
         while (!window().shouldClose()) {
-            Scene& activeScene = *mSceneStack.back();
+            if (mSceneStack.empty()) {
+                mFrameController.execute(
+                    {},
+                    [](float dt) {},
+                    [this](float dt) {
+                        mRenderer.clear(math::Color::Blue);
+                    },
+                    [](float dt) {},
+                    [this](float dt) {
+
+                    }
+                );
+                continue;
+            }
+
+            Scene& activeScene = this->activeScene();
             Camera& activeCamera = activeScene.activeCamera();
 
             mFrameController.execute(
