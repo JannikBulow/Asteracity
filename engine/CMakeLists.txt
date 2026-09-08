@@ -92,6 +92,8 @@ set(SOURCES
     src/resource/sound.cpp
     src/resource/texture.cpp
 
+    src/scene/scene.cpp
+
     src/sound/audio_device.cpp
 
     src/util/resource_location.cpp
@@ -135,6 +137,8 @@ set(HEADERS
     include/engine/resource/sampler_descriptor.h
     include/engine/resource/sound.h
     include/engine/resource/texture.h
+
+    include/engine/scene/scene.h
 
     include/engine/sound/audio_device.h
 
