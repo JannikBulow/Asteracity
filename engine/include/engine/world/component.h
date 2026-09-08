@@ -6,6 +6,7 @@
 #include "engine/world/entity.h"
 
 #include <memory>
+#include <tuple>
 
 namespace engine {
     class IComponentStorage {
@@ -138,7 +139,7 @@ namespace engine {
         bool isEligible(Entity entity) const {
             return std::apply([&](auto*... storage) {
                 return (storage->contains(entity) && ...);
-            });
+            }, mStorages);
         }
 
         Iterator begin() {
@@ -162,12 +163,14 @@ namespace engine {
 
             std::apply([&](auto*... storage) {
                 ([&] {
-                    if (storage.size() < smallestSize) {
-                        smallestSize = storage.size();
+                    if (storage->size() < smallestSize) {
+                        smallestSize = storage->size();
                         smallestStorage = storage;
                     }
                 }(), ...);
             }, mStorages);
+
+            return smallestStorage;
         }
 
         Entity baseEntity(size_t index) {
