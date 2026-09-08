@@ -216,6 +216,11 @@ namespace engine {
         }
 
         template<class T>
+        void remove(Entity entity) {
+            storage<T>().remove(entity);
+        }
+
+        template<class T>
         T* get(Entity entity) {
             return storage<T>().get(entity);
         }
