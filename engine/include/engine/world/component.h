@@ -14,6 +14,7 @@ namespace engine {
 
         virtual size_t size() const = 0;
         virtual Entity entityAt(size_t index) const = 0;
+        virtual void remove(Entity entity) = 0;
     };
 
     template<class T>
@@ -21,6 +22,10 @@ namespace engine {
     class ComponentStorage : public IComponentStorage {
     public:
         size_t size() const override { return mEntities.size(); }
+
+        Entity entityAt(size_t index) const override {
+            return mEntities[index];
+        }
 
         T& add(Entity entity, T component = {}) {
             if (contains(entity)) throw util::GameException();
@@ -37,7 +42,7 @@ namespace engine {
             return mComponents.back();
         }
 
-        void remove(Entity entity) {
+        void remove(Entity entity) override {
             if (!contains(entity)) throw util::GameException();
 
             uint32_t removed = mSparse[entity.index];
@@ -66,10 +71,6 @@ namespace engine {
         T* get(Entity entity) {
             if (!contains(entity)) return nullptr;
             return &mComponents[mSparse[entity.index]];
-        }
-
-        Entity entityAt(size_t index) const override {
-            return mEntities[index];
         }
 
     private:
@@ -218,6 +219,12 @@ namespace engine {
         template<class T>
         void remove(Entity entity) {
             storage<T>().remove(entity);
+        }
+
+        void onDestroyEntity(Entity entity) {
+            for (auto& storage : mComponentStorages) {
+                if (storage) storage->remove(entity);
+            }
         }
 
         template<class T>
