@@ -14,6 +14,9 @@
 
 #include <engine/input/input_handler.h>
 
+#include <engine/world/components/renderer.h>
+#include <engine/world/components/transform.h>
+
 #include <engine/engine.h>
 
 #include <ranges>
@@ -46,29 +49,31 @@ int main(int argc, char** argv) {
     input.setKeybind(Action::Left, engine::Key::A);
     input.setKeybind(Action::Right, engine::Key::D);
 
-    engine::Font font = engine.resourceManager().createFont({"/usr/share/fonts/liberation", "LiberationSans-Regular.ttf"}, 24);
-
     engine::Sprite rat(engine.resourceManager().createTexture({"/home/jannik/Downloads", "rat.png"}));
 
-    math::Vec2 playerPosition = math::Vec2::Zero();
+    engine.pushScene(std::make_unique<engine::Scene>());
 
-    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&input, &playerPosition](engine::Engine& engine, float dt) {
+    engine::World& world = engine.activeScene().world();
+
+    engine::Entity staticEntity = world.createEntity();
+    world.addComponent<engine::Transform>(staticEntity);
+    world.addComponent<engine::SpriteRenderer>(staticEntity, rat);
+
+    engine::Entity playerEntity = world.createEntity();
+    world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
+    world.addComponent<engine::Transform>(playerEntity);
+
+    auto& playerTransform = *world.getComponent<engine::Transform>(playerEntity);
+
+    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&input, &playerTransform](engine::Engine& engine, float dt) {
         input.update();
 
-        if (input.isDown(Action::Up)) playerPosition.y += 10.0f * dt;
-        if (input.isDown(Action::Down)) playerPosition.y -= 10.0f * dt;
-        if (input.isDown(Action::Left)) playerPosition.x -= 10.0f * dt;
-        if (input.isDown(Action::Right)) playerPosition.x += 10.0f * dt;
+        if (input.isDown(Action::Up)) playerTransform.position.y += 10.0f * dt;
+        if (input.isDown(Action::Down)) playerTransform.position.y -= 10.0f * dt;
+        if (input.isDown(Action::Left)) playerTransform.position.x -= 10.0f * dt;
+        if (input.isDown(Action::Right)) playerTransform.position.x += 10.0f * dt;
 
-        engine.camera().position = playerPosition;
-    });
-
-    engine.setCallback(engine::Engine::WORLD_RENDER_CALLBACK, [&font, &rat, &playerPosition](engine::Engine& engine) {
-        engine::Renderer& renderer = engine.renderer();
-
-        renderer.drawRect(math::Vec2::Zero(), math::Vec2::One(), math::Color::Blue);
-        renderer.drawSprite(rat, playerPosition, {1.0f, 1.5f});
-        renderer.drawText(font, "playa", {playerPosition.x, playerPosition.y + 1.0f}, 24, math::Color::Black, true);
+        engine.activeScene().activeCamera().position = playerTransform.position;
     });
 
      return engine.main(argc, argv);
