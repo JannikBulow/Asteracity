@@ -18,6 +18,18 @@ namespace engine {
         , mRenderer(mBackend)
         , mAudioDevice(mBackend) {}
 
+    void Engine::pushScene(std::unique_ptr<Scene> scene) {
+        mSceneStack.push_back(std::move(scene));
+    }
+
+    void Engine::popScene() {
+        mSceneStack.pop_back();
+    }
+
+    void Engine::clearSceneStack() {
+        mSceneStack.clear();
+    }
+
     void Engine::setCallback(CallbackID id, std::function<void(Engine&, float)> callback) {
         mCallbacks[id] = std::move(callback);
     }

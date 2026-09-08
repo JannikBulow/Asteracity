@@ -55,6 +55,13 @@ namespace engine {
         const ResourceManager& resourceManager() const { return mResourceManager; }
         const AudioDevice& audioDevice() const { return mAudioDevice; }
 
+        Scene& activeScene() { return *mSceneStack.back(); }
+        const Scene& activeScene() const { return *mSceneStack.back(); }
+
+        void pushScene(std::unique_ptr<Scene> scene);
+        void popScene();
+        void clearSceneStack();
+
         void setCallback(CallbackID id, std::function<void(Engine&)> callback) { setCallback(id, [callback = std::move(callback)](Engine& engine, float) { callback(engine); }); }
         void setCallback(CallbackID id, std::function<void(Engine&, float)> callback);
 
