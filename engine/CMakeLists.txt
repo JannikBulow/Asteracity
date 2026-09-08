@@ -99,6 +99,8 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/world/systems/render_system.cpp
+
     src/world/world.cpp
 
     src/config.cpp
@@ -152,6 +154,8 @@ set(HEADERS
 
     include/engine/world/components/transform.h
     include/engine/world/components/renderer.h
+
+    include/engine/world/systems/render_system.h
 
     include/engine/world/component.h
     include/engine/world/entity.h
