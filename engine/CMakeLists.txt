@@ -155,6 +155,7 @@ set(HEADERS
 
     include/engine/world/component.h
     include/engine/world/entity.h
+    include/engine/world/system.h
     include/engine/world/world.h
 
     include/engine/compile_options.h
