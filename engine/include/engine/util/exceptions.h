@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_EXCEPTIONS_H
-#define UNNAMEDGAME_ENGINE_UTIL_EXCEPTIONS_H
+#ifndef ASTERACITY_ENGINE_UTIL_EXCEPTIONS_H
+#define ASTERACITY_ENGINE_UTIL_EXCEPTIONS_H
 
 #include <format>
 #include <stdexcept>
@@ -32,4 +32,4 @@ namespace util {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_EXCEPTIONS_H
+#endif //ASTERACITY_ENGINE_UTIL_EXCEPTIONS_H

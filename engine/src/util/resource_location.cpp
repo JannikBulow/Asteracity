@@ -9,7 +9,7 @@ namespace util {
     using namespace std::string_view_literals;
 
     ResourceLocation::ResourceLocation(std::string_view resource)
-        : mPath(CreatePath(UNNAMEDGAME_RL_DEFAULT_DOMAINsv, resource)) {}
+        : mPath(CreatePath(ASTERACITY_RL_DEFAULT_DOMAINsv, resource)) {}
 
     ResourceLocation::ResourceLocation(std::string_view domain, std::string_view resource)
         : mPath(CreatePath(domain, resource)) {}

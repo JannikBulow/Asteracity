@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_BACKEND_BACKEND_H
-#define UNNAMEDGAME_ENGINE_BACKEND_BACKEND_H
+#ifndef ASTERACITY_ENGINE_BACKEND_BACKEND_H
+#define ASTERACITY_ENGINE_BACKEND_BACKEND_H
 
 #include "engine/backend/asset_provider.h"
 #include "engine/backend/audio_device.h"
@@ -43,4 +43,4 @@ namespace backend {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_BACKEND_BACKEND_H
+#endif //ASTERACITY_ENGINE_BACKEND_BACKEND_H

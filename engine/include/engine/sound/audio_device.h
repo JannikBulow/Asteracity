@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_SOUND_AUDIO_DEVICE_H
-#define UNNAMEDGAME_ENGINE_SOUND_AUDIO_DEVICE_H
+#ifndef ASTERACITY_ENGINE_SOUND_AUDIO_DEVICE_H
+#define ASTERACITY_ENGINE_SOUND_AUDIO_DEVICE_H
 
 #include "engine/backend/backend.h"
 
@@ -36,4 +36,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_SOUND_AUDIO_DEVICE_H
+#endif //ASTERACITY_ENGINE_SOUND_AUDIO_DEVICE_H

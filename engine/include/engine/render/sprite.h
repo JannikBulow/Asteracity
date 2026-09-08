@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_RENDER_SPRITE_H
-#define UNNAMEDGAME_ENGINE_RENDER_SPRITE_H
+#ifndef ASTERACITY_ENGINE_RENDER_SPRITE_H
+#define ASTERACITY_ENGINE_RENDER_SPRITE_H
 
 #include "engine/resource/texture.h"
 
@@ -21,4 +21,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_RENDER_SPRITE_H
+#endif //ASTERACITY_ENGINE_RENDER_SPRITE_H

@@ -2,15 +2,15 @@
 
 // Collection of definitions defined by macros
 
-#ifndef UNNAMEDGAME_ENGINE_COMPILE_OPTIONS_H
-#define UNNAMEDGAME_ENGINE_COMPILE_OPTIONS_H
+#ifndef ASTERACITY_ENGINE_COMPILE_OPTIONS_H
+#define ASTERACITY_ENGINE_COMPILE_OPTIONS_H
 
-#ifdef UNNAMEDGAME_TARGET_MULTITHREADED
+#ifdef ASTERACITY_TARGET_MULTITHREADED
 #include <atomic>
 #endif
 
 namespace options {
-#ifdef UNNAMEDGAME_TARGET_MULTITHREADED
+#ifdef ASTERACITY_TARGET_MULTITHREADED
     template<class T>
     using Atomic = std::atomic<T>;
 #else
@@ -19,4 +19,4 @@ namespace options {
 #endif
 }
 
-#endif //UNNAMEDGAME_ENGINE_COMPILE_OPTIONS_H
+#endif //ASTERACITY_ENGINE_COMPILE_OPTIONS_H

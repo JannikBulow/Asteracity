@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_BACKEND_RENDERER_H
-#define UNNAMEDGAME_ENGINE_BACKEND_RENDERER_H
+#ifndef ASTERACITY_ENGINE_BACKEND_RENDERER_H
+#define ASTERACITY_ENGINE_BACKEND_RENDERER_H
 
 #include "engine/util/math.h"
 #include "engine/util/unicode.h"
@@ -154,4 +154,4 @@ namespace backend {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_BACKEND_RENDERER_H
+#endif //ASTERACITY_ENGINE_BACKEND_RENDERER_H

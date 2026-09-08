@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_UNICODE_H
-#define UNNAMEDGAME_ENGINE_UTIL_UNICODE_H
+#ifndef ASTERACITY_ENGINE_UTIL_UNICODE_H
+#define ASTERACITY_ENGINE_UTIL_UNICODE_H
 
 #include <cstddef>
 #include <cstdint>
@@ -14,4 +14,4 @@ namespace unicode {
     size_t Hash(const codepoint* codepoints, size_t codepointCount);
 }
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_UNICODE_H
+#endif //ASTERACITY_ENGINE_UTIL_UNICODE_H

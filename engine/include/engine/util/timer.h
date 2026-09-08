@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_TIMER_H
-#define UNNAMEDGAME_ENGINE_UTIL_TIMER_H
+#ifndef ASTERACITY_ENGINE_UTIL_TIMER_H
+#define ASTERACITY_ENGINE_UTIL_TIMER_H
 
 #include <chrono>
 #include <thread>
@@ -96,4 +96,4 @@ namespace util {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_TIMER_H
+#endif //ASTERACITY_ENGINE_UTIL_TIMER_H

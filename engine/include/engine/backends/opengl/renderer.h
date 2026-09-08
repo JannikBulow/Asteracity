@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_BACKENDS_OPENGL_RENDERER_H
-#define UNNAMEDGAME_ENGINE_BACKENDS_OPENGL_RENDERER_H
+#ifndef ASTERACITY_ENGINE_BACKENDS_OPENGL_RENDERER_H
+#define ASTERACITY_ENGINE_BACKENDS_OPENGL_RENDERER_H
 
 #include "engine/backend/graphics_device.h"
 #include "engine/backend/renderer.h"
@@ -151,4 +151,4 @@ namespace backend {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_BACKENDS_OPENGL_RENDERER_H
+#endif //ASTERACITY_ENGINE_BACKENDS_OPENGL_RENDERER_H

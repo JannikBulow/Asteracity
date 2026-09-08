@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_MATH_H
-#define UNNAMEDGAME_ENGINE_UTIL_MATH_H
+#ifndef ASTERACITY_ENGINE_UTIL_MATH_H
+#define ASTERACITY_ENGINE_UTIL_MATH_H
 
 #include <array>
 #include <cmath>
@@ -391,4 +391,4 @@ namespace math {
     }
 }
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_MATH_H
+#endif //ASTERACITY_ENGINE_UTIL_MATH_H

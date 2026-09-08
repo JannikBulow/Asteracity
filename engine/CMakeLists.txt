@@ -70,7 +70,7 @@ endif()
 
 find_package(OpenGL REQUIRED)
 
-option(UNNAMEDGAME_TARGET_MULTITHREADED "Enable/disable certain features such as atomics and internal mutexes to make the engine multithreading safe. Keep off for single threaded usages to improve performance" OFF)
+option(ASTERACITY_TARGET_MULTITHREADED "Enable/disable certain features such as atomics and internal mutexes to make the engine multithreading safe. Keep off for single threaded usages to improve performance" OFF)
 
 set(SOURCES
     src/backends/glfw/input_provider.cpp
@@ -154,24 +154,24 @@ set(HEADERS
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 
-add_library(unnamedgame-engine STATIC ${SOURCES} ${HEADERS})
-add_library(UnnamedGame::Engine ALIAS unnamedgame-engine)
+add_library(asteracity-engine STATIC ${SOURCES} ${HEADERS})
+add_library(Asteracity::Engine ALIAS asteracity-engine)
 
-target_compile_definitions(unnamedgame-engine PRIVATE UNNAMEDGAME_RL_DEFAULT_DOMAIN="${PROJECT_SOURCE_DIR}/assets")
-target_compile_definitions(unnamedgame-engine PRIVATE UNNAMEDGAME_RL_DEFAULT_DOMAINsv="${PROJECT_SOURCE_DIR}/assets"sv)
+target_compile_definitions(asteracity-engine PRIVATE ASTERACITY_RL_DEFAULT_DOMAIN="${PROJECT_SOURCE_DIR}/assets")
+target_compile_definitions(asteracity-engine PRIVATE ASTERACITY_RL_DEFAULT_DOMAINsv="${PROJECT_SOURCE_DIR}/assets"sv)
 
-if (UNNAMEDGAME_TARGET_MULTITHREADED)
-    target_compile_definitions(unnamedgame-engine PUBLIC UNNAMEDGAME_TARGET_MULTITHREADED)
+if (ASTERACITY_TARGET_MULTITHREADED)
+    target_compile_definitions(asteracity-engine PUBLIC ASTERACITY_TARGET_MULTITHREADED)
 endif()
 
-target_include_directories(unnamedgame-engine
+target_include_directories(asteracity-engine
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_compile_features(unnamedgame-engine PUBLIC cxx_std_20)
+target_compile_features(asteracity-engine PUBLIC cxx_std_20)
 
-target_link_libraries(unnamedgame-engine
+target_link_libraries(asteracity-engine
     PUBLIC
         glfw
         OpenGL::GL

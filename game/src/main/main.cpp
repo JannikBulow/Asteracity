@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         .window = {
             .width = 100,
             .height = 100,
-            .title = "UnnamedGame"
+            .title = "Asteracity"
         },
         .graphicsBackend = engine::GraphicsBackend::OpenGL,
         .audioBackend = engine::AudioBackend::Miniaudio

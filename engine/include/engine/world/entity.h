@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_WORLD_ENTITY_H
-#define UNNAMEDGAME_ENGINE_WORLD_ENTITY_H
+#ifndef ASTERACITY_ENGINE_WORLD_ENTITY_H
+#define ASTERACITY_ENGINE_WORLD_ENTITY_H
 
 #include "engine/util/handle.h"
 
@@ -19,4 +19,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_WORLD_ENTITY_H
+#endif //ASTERACITY_ENGINE_WORLD_ENTITY_H

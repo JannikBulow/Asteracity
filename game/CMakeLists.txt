@@ -9,14 +9,14 @@ set(HEADERS
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 
-add_executable(unnamedgame ${SOURCES} ${HEADERS})
-add_executable(UnnamedGame ALIAS unnamedgame)
+add_executable(asteracity ${SOURCES} ${HEADERS})
+add_executable(Asteracity ALIAS asteracity)
 
-target_include_directories(unnamedgame
+target_include_directories(asteracity
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_compile_features(unnamedgame PUBLIC cxx_std_20)
+target_compile_features(asteracity PUBLIC cxx_std_20)
 
-target_link_libraries(unnamedgame PRIVATE UnnamedGame::Engine)
+target_link_libraries(asteracity PRIVATE Asteracity::Engine)

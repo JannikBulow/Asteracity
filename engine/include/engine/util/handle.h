@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_HANDLE_H
-#define UNNAMEDGAME_ENGINE_UTIL_HANDLE_H
+#ifndef ASTERACITY_ENGINE_UTIL_HANDLE_H
+#define ASTERACITY_ENGINE_UTIL_HANDLE_H
 
 #include "engine/util/exceptions.h"
 
@@ -159,4 +159,4 @@ namespace util {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_HANDLE_H
+#endif //ASTERACITY_ENGINE_UTIL_HANDLE_H

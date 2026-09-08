@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_RESOURCE_SOUND_H
-#define UNNAMEDGAME_ENGINE_RESOURCE_SOUND_H
+#ifndef ASTERACITY_ENGINE_RESOURCE_SOUND_H
+#define ASTERACITY_ENGINE_RESOURCE_SOUND_H
 
 #include "engine/backend/asset_provider.h"
 
@@ -83,4 +83,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_RESOURCE_SOUND_H
+#endif //ASTERACITY_ENGINE_RESOURCE_SOUND_H

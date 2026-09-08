@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_UTIL_RESOURCE_LOCATION_H
-#define UNNAMEDGAME_ENGINE_UTIL_RESOURCE_LOCATION_H
+#ifndef ASTERACITY_ENGINE_UTIL_RESOURCE_LOCATION_H
+#define ASTERACITY_ENGINE_UTIL_RESOURCE_LOCATION_H
 
 #include <filesystem>
 #include <memory>
@@ -41,4 +41,4 @@ struct std::hash<util::ResourceLocation> {
     }
 };
 
-#endif //UNNAMEDGAME_ENGINE_UTIL_RESOURCE_LOCATION_H
+#endif //ASTERACITY_ENGINE_UTIL_RESOURCE_LOCATION_H

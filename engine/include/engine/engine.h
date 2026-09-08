@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_ENGINE_H
-#define UNNAMEDGAME_ENGINE_ENGINE_H
+#ifndef ASTERACITY_ENGINE_ENGINE_H
+#define ASTERACITY_ENGINE_ENGINE_H
 
 #include "engine/backend/backend.h"
 
@@ -87,4 +87,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_ENGINE_H
+#endif //ASTERACITY_ENGINE_ENGINE_H

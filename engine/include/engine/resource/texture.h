@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef UNNAMEDGAME_ENGINE_RESOURCE_TEXTURE_H
-#define UNNAMEDGAME_ENGINE_RESOURCE_TEXTURE_H
+#ifndef ASTERACITY_ENGINE_RESOURCE_TEXTURE_H
+#define ASTERACITY_ENGINE_RESOURCE_TEXTURE_H
 
 #include "engine/backend/graphics_device.h"
 
@@ -99,4 +99,4 @@ namespace engine {
     };
 }
 
-#endif //UNNAMEDGAME_ENGINE_RESOURCE_TEXTURE_H
+#endif //ASTERACITY_ENGINE_RESOURCE_TEXTURE_H
