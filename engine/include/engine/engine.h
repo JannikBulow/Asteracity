@@ -10,12 +10,15 @@
 
 #include "engine/resource/resource_manager.h"
 
+#include "engine/scene/scene.h"
+
 #include "engine/sound/audio_device.h"
 
 #include "engine/config.h"
 
 #include <array>
 #include <functional>
+#include <memory>
 #include <span>
 
 namespace engine {
@@ -52,10 +55,6 @@ namespace engine {
         const ResourceManager& resourceManager() const { return mResourceManager; }
         const AudioDevice& audioDevice() const { return mAudioDevice; }
 
-        Camera& camera() { return mCamera; }
-
-        void setBackgroundColor(math::Color color);
-
         void setCallback(CallbackID id, std::function<void(Engine&)> callback) { setCallback(id, [callback = std::move(callback)](Engine& engine, float) { callback(engine); }); }
         void setCallback(CallbackID id, std::function<void(Engine&, float)> callback);
 
@@ -77,9 +76,7 @@ namespace engine {
         Renderer mRenderer;
         AudioDevice mAudioDevice;
 
-        Camera mCamera;
-
-        math::Color mBackgroundColor;
+        std::vector<std::unique_ptr<Scene>> mSceneStack;
 
         std::array<std::function<void(Engine&, float)>, _count> mCallbacks{};
 

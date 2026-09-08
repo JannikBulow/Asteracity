@@ -9,20 +9,14 @@ namespace engine {
         , mFrameController(mBackend)
         , mResourceManager(mBackend)
         , mRenderer(mBackend)
-        , mAudioDevice(mBackend)
-        , mBackgroundColor(math::Color::White) {}
+        , mAudioDevice(mBackend) {}
 
     Engine::Engine(const backend::Backend& backend)
         : mBackend(backend)
         , mFrameController(mBackend)
         , mResourceManager(mBackend)
         , mRenderer(mBackend)
-        , mAudioDevice(mBackend)
-        , mBackgroundColor(math::Color::White) {}
-
-    void Engine::setBackgroundColor(math::Color color) {
-        mBackgroundColor = color;
-    }
+        , mAudioDevice(mBackend) {}
 
     void Engine::setCallback(CallbackID id, std::function<void(Engine&, float)> callback) {
         mCallbacks[id] = std::move(callback);
@@ -31,14 +25,17 @@ namespace engine {
     int Engine::main(std::span<std::string_view> args) {
         mFrameController.timer().start();
         while (!window().shouldClose()) {
+            Scene& activeScene = *mSceneStack.back();
+            Camera& activeCamera = activeScene.activeCamera();
+
             mFrameController.execute(
-                mCamera,
+                activeCamera,
                 [this](float dt) {
                     call(UPDATE_CALLBACK, dt);
                     mAudioDevice.update(dt);
                 },
-                [this](float dt) {
-                    mRenderer.clear(mBackgroundColor);
+                [this, &activeCamera](float dt) {
+                    mRenderer.clear(activeCamera.backgroundColor);
                 },
                 [this](float dt) {
                     call(WORLD_RENDER_CALLBACK, dt);
