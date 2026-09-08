@@ -150,6 +150,9 @@ set(HEADERS
     include/engine/util/timer.h
     include/engine/util/unicode.h
 
+    include/engine/world/components/transform.h
+    include/engine/world/components/renderer.h
+
     include/engine/world/component.h
     include/engine/world/entity.h
     include/engine/world/world.h
