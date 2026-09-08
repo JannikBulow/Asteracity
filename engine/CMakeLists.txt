@@ -97,6 +97,8 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/world/world.cpp
+
     src/config.cpp
     src/engine.cpp
 )
@@ -146,6 +148,7 @@ set(HEADERS
 
     include/engine/world/component.h
     include/engine/world/entity.h
+    include/engine/world/world.h
 
     include/engine/compile_options.h
     include/engine/config.h
