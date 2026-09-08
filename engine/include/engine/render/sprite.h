@@ -10,14 +10,16 @@
 namespace engine {
     class Sprite {
     public:
-        explicit Sprite(Texture texture, std::optional<math::Rect> pixelBounds = std::nullopt);
+        explicit Sprite(Texture texture, std::optional<math::Rect> pixelBounds = std::nullopt, math::Color tint = math::Color::White);
 
         const Texture& texture() const { return mTexture; }
         math::Rect uv() const { return mUV; }
+        math::Color tint() const { return mTint; }
 
     private:
         Texture mTexture;
         math::Rect mUV;
+        math::Color mTint;
     };
 }
 
