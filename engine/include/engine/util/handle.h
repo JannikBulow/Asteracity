@@ -100,7 +100,27 @@ namespace util {
             return slot.value.value();
         }
 
+        const T& get(Handle<H> handle) const {
+            if (handle.index >= mValues.size()) throw GameException();
+
+            const Slot& slot = mValues[handle.index];
+            if (slot.generation != handle.generation) throw GameException();
+            if (!slot.value.has_value()) throw GameException();
+
+            return slot.value.value();
+        }
+
         T* getNullable(Handle<H> handle) {
+            if (handle.index >= mValues.size()) return nullptr;
+
+            Slot& slot = mValues[handle.index];
+            if (slot.generation != handle.generation) return nullptr;
+            if (!slot.value.has_value()) return nullptr;
+
+            return slot.value.value();
+        }
+
+        const T* getNullable(Handle<H> handle) const {
             if (handle.index >= mValues.size()) return nullptr;
 
             Slot& slot = mValues[handle.index];
