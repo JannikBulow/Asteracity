@@ -10,8 +10,11 @@ namespace engine {
     public:
         virtual ~ISystem() = default;
 
+        virtual void preUpdate(Engine& engine, float dt) {}
         virtual void update(Engine& engine, float dt) {}
-        virtual void render(Engine& engine) {}
+        virtual void postUpdate(Engine& engine, float dt) {}
+        virtual void render(Engine& engine) {} // world render!
+        virtual void renderUI(Engine& engine) {}
     };
 }
 
