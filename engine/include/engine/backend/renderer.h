@@ -12,6 +12,8 @@ namespace backend {
         float zoom = 1.0f;
         float worldHeight = 10.0f;
 
+        math::Color backgroundColor = math::Color::White;
+
         math::Rect worldBounds(math::Vec2 viewportSize) const {
             float height = worldHeight / zoom;
             float width = height * (viewportSize.x / viewportSize.y);
