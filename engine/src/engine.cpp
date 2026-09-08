@@ -30,6 +30,10 @@ namespace engine {
         mSceneStack.clear();
     }
 
+    void Engine::addSystem(std::unique_ptr<ISystem> system) {
+        mSystems.push_back(std::move(system));
+    }
+
     void Engine::setCallback(CallbackID id, std::function<void(Engine&, float)> callback) {
         mCallbacks[id] = std::move(callback);
     }
@@ -60,17 +64,18 @@ namespace engine {
             mFrameController.execute(
                 activeCamera,
                 [this](float dt) {
-                    call(UPDATE_CALLBACK, dt);
-                    mAudioDevice.update(dt);
+                    preUpdate(dt);
+                    update(dt);
+                    postUpdate(dt);
                 },
                 [this, &activeCamera](float dt) {
                     mRenderer.clear(activeCamera.backgroundColor);
                 },
                 [this](float dt) {
-                    call(WORLD_RENDER_CALLBACK, dt);
+                    render();
                 },
                 [this](float dt) {
-                    call(UI_RENDER_CALLBACK, dt);
+                    renderUI();
                 }
             );
         }
@@ -80,5 +85,63 @@ namespace engine {
 
     void Engine::call(CallbackID id, float dt) {
         if (mCallbacks[id]) mCallbacks[id](*this, dt);
+    }
+
+    void Engine::preUpdate(float dt) {
+        std::apply([&](auto&... systems) {
+            (systems.preUpdate(*this, dt), ...);
+        }, mBuiltinSystems);
+
+        for (auto& system : mSystems) {
+            system->preUpdate(*this, dt);
+        }
+    }
+
+    void Engine::update(float dt) {
+        std::apply([&](auto&... systems) {
+            (systems.update(*this, dt), ...);
+        }, mBuiltinSystems);
+
+        for (auto& system : mSystems) {
+            system->update(*this, dt);
+        }
+
+        call(UPDATE_CALLBACK, dt);
+    }
+
+    void Engine::postUpdate(float dt) {
+        std::apply([&](auto&... systems) {
+            (systems.postUpdate(*this, dt), ...);
+        }, mBuiltinSystems);
+
+        for (auto& system : mSystems) {
+            system->preUpdate(*this, dt);
+        }
+
+        mAudioDevice.update(dt);
+    }
+
+    void Engine::render() {
+        std::apply([&](auto&... systems) {
+            (systems.render(*this), ...);
+        }, mBuiltinSystems);
+
+        for (auto& system : mSystems) {
+            system->render(*this);
+        }
+
+        call(WORLD_RENDER_CALLBACK, 0.0f);
+    }
+
+    void Engine::renderUI() {
+        std::apply([&](auto&... systems) {
+            (systems.renderUI(*this), ...);
+        }, mBuiltinSystems);
+
+        for (auto& system : mSystems) {
+            system->renderUI(*this);
+        }
+
+        call(UI_RENDER_CALLBACK, 0.0f);
     }
 }

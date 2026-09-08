@@ -14,6 +14,8 @@
 
 #include "engine/sound/audio_device.h"
 
+#include "engine/world/systems/render_system.h"
+
 #include "engine/config.h"
 
 #include <array>
@@ -62,6 +64,8 @@ namespace engine {
         void popScene();
         void clearSceneStack();
 
+        void addSystem(std::unique_ptr<ISystem> system);
+
         void setCallback(CallbackID id, std::function<void(Engine&)> callback) { setCallback(id, [callback = std::move(callback)](Engine& engine, float) { callback(engine); }); }
         void setCallback(CallbackID id, std::function<void(Engine&, float)> callback);
 
@@ -83,11 +87,20 @@ namespace engine {
         Renderer mRenderer;
         AudioDevice mAudioDevice;
 
-        std::vector<std::unique_ptr<Scene>> mSceneStack;
-
         std::array<std::function<void(Engine&, float)>, _count> mCallbacks{};
 
+        std::vector<std::unique_ptr<Scene>> mSceneStack;
+
+        std::tuple<RenderSystem> mBuiltinSystems;
+        std::vector<std::unique_ptr<ISystem>> mSystems; // any non-builtin systems
+
         void call(CallbackID id, float dt);
+
+        void preUpdate(float dt);
+        void update(float dt);
+        void postUpdate(float dt);
+        void render();
+        void renderUI();
     };
 }
 
