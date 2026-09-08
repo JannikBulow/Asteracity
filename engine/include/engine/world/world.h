@@ -11,10 +11,9 @@ namespace engine {
         Entity createEntity();
         void destroyEntity(Entity entity);
 
-        template<class T>
-        T& addComponent(Entity entity, T component = {}) {
-            if (std::is_move_constructible_v<T>) return mComponentManager.add<T>(entity, std::move(component));
-            else return mComponentManager.add<T>(entity, component);
+        template<class T, class... Args>
+        T& addComponent(Entity entity, Args&&... args) {
+            return mComponentManager.add<T>(entity, T(std::forward<Args>(args)...));
         }
 
         template<class T>
