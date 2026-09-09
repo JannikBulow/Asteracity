@@ -99,7 +99,11 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
-    src/world/systems/render_system.cpp
+    src/world/systems/render_systems.cpp
+
+    src/world/tiles/registry.cpp
+    src/world/tiles/tile_map.cpp
+    src/world/tiles/tile_world.cpp
 
     src/world/world.cpp
 
@@ -155,7 +159,12 @@ set(HEADERS
     include/engine/world/components/transform.h
     include/engine/world/components/renderer.h
 
-    include/engine/world/systems/render_system.h
+    include/engine/world/systems/render_systems.h
+
+    include/engine/world/tiles/registry.h
+    include/engine/world/tiles/tile.h
+    include/engine/world/tiles/tile_map.h
+    include/engine/world/tiles/tile_world.h
 
     include/engine/world/component.h
     include/engine/world/entity.h

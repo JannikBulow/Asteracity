@@ -3,7 +3,8 @@
 #include "engine/scene/scene.h"
 
 namespace engine {
-    Scene::Scene(Camera mainCamera) {
+    Scene::Scene(TileRegistry& tileRegistry, math::Vec2I worldSize, Camera mainCamera)
+        : mTileWorld(tileRegistry, worldSize.x, worldSize.y) {
         mMainCamera = createCamera(mainCamera);
         mActiveCamera = mMainCamera;
     }

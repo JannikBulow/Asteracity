@@ -14,7 +14,9 @@
 
 #include "engine/sound/audio_device.h"
 
-#include "engine/world/systems/render_system.h"
+#include "engine/world/systems/render_systems.h"
+
+#include "engine/world/tiles/tile_world.h"
 
 #include "engine/config.h"
 
@@ -51,11 +53,13 @@ namespace engine {
         Renderer& renderer() { return mRenderer; }
         ResourceManager& resourceManager() { return mResourceManager; }
         AudioDevice& audioDevice() { return mAudioDevice; }
+        TileRegistry& tileRegistry() { return mTileRegistry; }
 
         const FrameController& frameController() const { return mFrameController; }
         const Renderer& renderer() const { return mRenderer; }
         const ResourceManager& resourceManager() const { return mResourceManager; }
         const AudioDevice& audioDevice() const { return mAudioDevice; }
+        const TileRegistry& tileRegistry() const { return mTileRegistry; }
 
         Scene& activeScene() { return *mSceneStack.back(); }
         const Scene& activeScene() const { return *mSceneStack.back(); }
@@ -86,12 +90,16 @@ namespace engine {
         ResourceManager mResourceManager;
         Renderer mRenderer;
         AudioDevice mAudioDevice;
+        TileRegistry mTileRegistry;
 
         std::array<std::function<void(Engine&, float)>, _count> mCallbacks{};
 
         std::vector<std::unique_ptr<Scene>> mSceneStack;
 
-        std::tuple<RenderSystem> mBuiltinSystems;
+        std::tuple<
+            TileRenderSystem,
+            RenderSystem
+        > mBuiltinSystems;
         std::vector<std::unique_ptr<ISystem>> mSystems; // any non-builtin systems
 
         void call(CallbackID id, float dt);

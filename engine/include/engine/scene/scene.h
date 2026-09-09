@@ -5,15 +5,20 @@
 
 #include "engine/render/camera.h"
 
+#include "engine/world/tiles/tile_world.h"
+
 #include "engine/world/world.h"
 
 namespace engine {
     class Scene {
     public:
-        explicit Scene(Camera mainCamera = {});
+        Scene(TileRegistry& tileRegistry, math::Vec2I worldSize, Camera mainCamera = {});
 
         World& world() { return mWorld; }
+        TileWorld& tileWorld() { return mTileWorld; }
+
         const World& world() const { return mWorld; }
+        const TileWorld& tileWorld() const { return mTileWorld; }
 
         CameraHandle createCamera(Camera camera = {});
         void destroyCamera(CameraHandle camera);
@@ -34,6 +39,7 @@ namespace engine {
 
     private:
         World mWorld;
+        TileWorld mTileWorld;
 
         util::HandleStorage<Camera> mCameras;
         CameraHandle mMainCamera; // always exists

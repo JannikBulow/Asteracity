@@ -50,14 +50,18 @@ int main(int argc, char** argv) {
     input.setKeybind(Action::Right, engine::Key::D);
 
     engine::Sprite rat(engine.resourceManager().createTexture({"/home/jannik/Downloads", "rat.png"}));
+    engine::Sprite black(engine.resourceManager().createTexture({"/home/jannik/Downloads", "black.png"}));
+    engine::Sprite grass1(engine.resourceManager().createTexture({"/home/jannik/Downloads", "grass_1.png"}));
 
-    engine.pushScene(std::make_unique<engine::Scene>());
+    engine.tileRegistry().registerTile(0, {std::move(black)});
+    engine.tileRegistry().registerTile(1, {std::move(grass1)});
+
+    auto scene = std::make_unique<engine::Scene>(engine.tileRegistry(), math::Vec2I{50, 50});
+    scene->tileWorld().get({0, 0}).id = 1;
+
+    engine.pushScene(std::move(scene));
 
     engine::World& world = engine.activeScene().world();
-
-    engine::Entity staticEntity = world.createEntity();
-    world.addComponent<engine::Transform>(staticEntity);
-    world.addComponent<engine::SpriteRenderer>(staticEntity, rat);
 
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
