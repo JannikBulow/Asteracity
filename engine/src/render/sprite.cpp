@@ -3,8 +3,9 @@
 #include "engine/render/sprite.h"
 
 namespace engine {
-    Sprite::Sprite(Texture texture, std::optional<math::Rect> pixelBounds, math::Color tint)
+    Sprite::Sprite(Texture texture, math::Vec2 size, std::optional<math::Rect> pixelBounds, math::Color tint)
         : mTexture(std::move(texture))
+        , mSize(size)
         , mTint(tint) {
         math::Vec2 textureBounds = math::Vec2(math::Vec2I{mTexture.image().width, mTexture.image().height});
         if (pixelBounds) {

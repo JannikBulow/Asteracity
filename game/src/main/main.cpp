@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
     input.setKeybind(Action::Left, engine::Key::A);
     input.setKeybind(Action::Right, engine::Key::D);
 
-    engine::Sprite rat(engine.resourceManager().createTexture({"/home/jannik/Downloads", "rat.png"}));
-    engine::Sprite black(engine.resourceManager().createTexture({"/home/jannik/Downloads", "black.png"}));
-    engine::Sprite grass1(engine.resourceManager().createTexture({"/home/jannik/Downloads", "grass_1.png"}));
+    engine::Sprite rat(engine.resourceManager().createTexture({"/home/jannik/Downloads", "rat.png"}), math::Vec2::One());
+    engine::Sprite black(engine.resourceManager().createTexture({"/home/jannik/Downloads", "black.png"}), math::Vec2::One());
+    engine::Sprite grass1(engine.resourceManager().createTexture({"/home/jannik/Downloads", "grass_1.png"}), math::Vec2::One());
 
     engine.tileRegistry().registerTile(0, {std::move(black)});
     engine.tileRegistry().registerTile(1, {std::move(grass1)});

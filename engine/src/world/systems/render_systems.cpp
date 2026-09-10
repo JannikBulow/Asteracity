@@ -24,7 +24,8 @@ namespace engine {
                 Tile tile = activeScene.tileWorld().get({x, y});
                 const TileDefinition& definition = engine.tileRegistry()[tile.id];
 
-                engine.renderer().drawSprite(definition.sprite, {static_cast<float>(x), static_cast<float>(y)}, math::Vec2::One());
+                // tile stuff expects only 1x1 tiles. might add explicit checks later
+                engine.renderer().drawSprite(definition.sprite, {static_cast<float>(x), static_cast<float>(y)});
             }
         }
     }
@@ -33,7 +34,7 @@ namespace engine {
         Scene& activeScene = engine.activeScene();
 
         for (auto [entity, transform, renderer] : activeScene.world().viewEntities<Transform, SpriteRenderer>()) {
-            engine.renderer().drawSprite(renderer.sprite, transform.position, transform.scale, transform.rotation);
+            engine.renderer().drawSprite(renderer.sprite, transform.position, transform.rotation);
         }
     }
 }

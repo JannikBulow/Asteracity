@@ -10,15 +10,17 @@
 namespace engine {
     class Sprite {
     public:
-        explicit Sprite(Texture texture, std::optional<math::Rect> pixelBounds = std::nullopt, math::Color tint = math::Color::White);
+        Sprite(Texture texture, math::Vec2 size, std::optional<math::Rect> pixelBounds = std::nullopt, math::Color tint = math::Color::White);
 
         const Texture& texture() const { return mTexture; }
         math::Rect uv() const { return mUV; }
+        math::Vec2 size() const { return mSize; }
         math::Color tint() const { return mTint; }
 
     private:
         Texture mTexture;
         math::Rect mUV;
+        math::Vec2 mSize;
         math::Color mTint;
     };
 }

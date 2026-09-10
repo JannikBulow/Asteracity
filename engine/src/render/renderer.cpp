@@ -31,8 +31,8 @@ namespace engine {
         });
     }
 
-    void Renderer::drawSprite(const Sprite& sprite, math::Vec2 position, math::Vec2 size, float rotation) {
-        drawTexture(sprite.texture(), position, size, sprite.tint(), rotation, sprite.uv());
+    void Renderer::drawSprite(const Sprite& sprite, math::Vec2 position, float rotation) {
+        drawTexture(sprite.texture(), position, sprite.size(), sprite.tint(), rotation, sprite.uv());
     }
 
     void Renderer::drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin) {
