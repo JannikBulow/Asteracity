@@ -181,9 +181,6 @@ source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 add_library(asteracity-engine STATIC ${SOURCES} ${HEADERS})
 add_library(Asteracity::Engine ALIAS asteracity-engine)
 
-target_compile_definitions(asteracity-engine PRIVATE ASTERACITY_RL_DEFAULT_DOMAIN="${PROJECT_SOURCE_DIR}/assets")
-target_compile_definitions(asteracity-engine PRIVATE ASTERACITY_RL_DEFAULT_DOMAINsv="${PROJECT_SOURCE_DIR}/assets"sv)
-
 if (ASTERACITY_TARGET_MULTITHREADED)
     target_compile_definitions(asteracity-engine PUBLIC ASTERACITY_TARGET_MULTITHREADED)
 endif()

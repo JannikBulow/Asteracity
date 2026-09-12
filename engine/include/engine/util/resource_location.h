@@ -9,7 +9,9 @@
 namespace util {
     class ResourceLocation {
     public:
-        explicit ResourceLocation(std::string_view resource);
+        static const char* DefaultDomain;
+
+        ResourceLocation(std::string_view resource);
         ResourceLocation(std::string_view domain, std::string_view resource);
 
         bool operator==(const ResourceLocation& other) const;

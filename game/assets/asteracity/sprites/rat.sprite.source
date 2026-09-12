@@ -1,0 +1,17 @@
+; playing around with rat sprite
+
+; explicitly state which sprite binary version to use (can be ignored by normal people)
+version 1
+
+; define the name of the sprite for inspection purposes
+sprite "rat"
+
+; define either the texture or sheet of the sprite
+; if a texture is provided, an inline sheet must be defined in order to use the `uv` command
+; otherwise if a sheet is used, its definition will be automatically included
+texture resource("images/rat.png")
+
+; the size of the sprite
+; note that this size could be either world units or pixels depending on whether the sprite is used in world or ui rendering
+; this command does not affect how the sprite is read, only how it's displayed
+size 1 1
