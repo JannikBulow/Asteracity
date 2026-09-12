@@ -65,7 +65,9 @@ namespace assetc {
 
     void SpriteParser::parseUVCommand() {
         consume(); // uv
-        mProgress.uvX = ParseFloatExpression(mTokens);
-        mProgress.uvY = ParseFloatExpression(mTokens);
+        mProgress.uvLeft = ParseFloatExpression(mTokens);
+        mProgress.uvRight = ParseFloatExpression(mTokens);
+        mProgress.uvTop = ParseFloatExpression(mTokens);
+        mProgress.uvBottom = ParseFloatExpression(mTokens);
     }
 }
