@@ -12,8 +12,10 @@ namespace formats {
         Resource texture; // or sheet, but a sheet is just a texture with metadata
         int width;
         int height;
-        float uvX;
-        float uvY;
+        float uvLeft;
+        float uvRight;
+        float uvTop;
+        float uvBottom;
 
         template<BinaryOutput Out>
         void serialize(BinaryWriter<Out>& writer) const {
@@ -21,8 +23,10 @@ namespace formats {
             writer.write(texture);
             writer.writeU32(width);
             writer.writeU32(height);
-            writer.writeFloat(uvX);
-            writer.writeFloat(uvY);
+            writer.writeFloat(uvLeft);
+            writer.writeFloat(uvRight);
+            writer.writeFloat(uvTop);
+            writer.writeFloat(uvBottom);
         }
 
         template<BinaryInput In>
@@ -31,15 +35,19 @@ namespace formats {
             Resource texture = reader.template read<Resource>();
             int width = reader.readU32();
             int height = reader.readU32();
-            float uvX = reader.readFloat();
-            float uvY = reader.readFloat();
+            float uvLeft = reader.readFloat();
+            float uvRight = reader.readFloat();
+            float uvTop = reader.readFloat();
+            float uvBottom = reader.readFloat();
             return {
                 .header = std::move(header),
                 .texture = std::move(texture),
                 .width = width,
                 .height = height,
-                .uvX = uvX,
-                .uvY = uvY
+                .uvLeft = uvLeft,
+                .uvRight = uvRight,
+                .uvTop = uvTop,
+                .uvBottom = uvBottom,
             };
         }
     };
