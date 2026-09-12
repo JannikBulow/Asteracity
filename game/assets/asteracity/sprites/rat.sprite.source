@@ -14,4 +14,4 @@ texture resource("images/rat.png")
 ; the size of the sprite
 ; note that this size could be either world units or pixels depending on whether the sprite is used in world or ui rendering
 ; this command does not affect how the sprite is read, only how it's displayed
-size 1 1 1 1
+size 1 1
