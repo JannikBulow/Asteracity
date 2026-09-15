@@ -32,7 +32,7 @@ namespace assetc {
             case TokenType::SizeKeyword:
                 parseSizeCommand();
                 break;
-            case TokenType::UvKeyword:
+            case TokenType::UVKeyword:
                 parseUVCommand();
                 break;
 
@@ -59,15 +59,11 @@ namespace assetc {
 
     void SpriteParser::parseSizeCommand() {
         consume(); // size
-        mProgress.width = ParseIntegerExpression(mTokens);
-        mProgress.height = ParseIntegerExpression(mTokens);
+        mProgress.size = ParseIntSize(mTokens);
     }
 
     void SpriteParser::parseUVCommand() {
         consume(); // uv
-        mProgress.uvLeft = ParseFloatExpression(mTokens);
-        mProgress.uvRight = ParseFloatExpression(mTokens);
-        mProgress.uvTop = ParseFloatExpression(mTokens);
-        mProgress.uvBottom = ParseFloatExpression(mTokens);
+        mProgress.uv = ParseFloatRect(mTokens);
     }
 }

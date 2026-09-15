@@ -147,6 +147,22 @@ namespace assetc {
         return ExpressionParser<float>(tokens).parse();
     }
 
+    formats::IntRect ParseIntRect(TokenStream& tokens) {
+        int left = ParseIntegerExpression(tokens);
+        int right = ParseIntegerExpression(tokens);
+        int top = ParseIntegerExpression(tokens);
+        int bottom = ParseIntegerExpression(tokens);
+        return {left, right, top, bottom};
+    }
+
+    formats::FloatRect ParseFloatRect(TokenStream& tokens) {
+        float left = ParseFloatExpression(tokens);
+        float right = ParseFloatExpression(tokens);
+        float top = ParseFloatExpression(tokens);
+        float bottom = ParseFloatExpression(tokens);
+        return {left, right, top, bottom};
+    }
+
     formats::Resource ParseResource(TokenStream& tokens) {
         tokens.consume(); // resource keyword
 
@@ -172,5 +188,17 @@ namespace assetc {
             .domain = std::move(domain),
             .path = std::move(path)
         };
+    }
+
+    formats::IntSize ParseIntSize(TokenStream& tokens) {
+        int width = ParseIntegerExpression(tokens);
+        int height = ParseIntegerExpression(tokens);
+        return {width, height};
+    }
+
+    formats::FloatSize ParseFloatSize(TokenStream& tokens) {
+        float width = ParseFloatExpression(tokens);
+        float height = ParseFloatExpression(tokens);
+        return {width, height};
     }
 }

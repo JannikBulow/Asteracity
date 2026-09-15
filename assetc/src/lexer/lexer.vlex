@@ -13,13 +13,20 @@ tokens assetc {
     _float_literal
     _string_literal
 
-    resource
-    size
-    sprite
-    texture
-    uv
-    sheet
     version
+
+    sprite
+
+    resource
+    rgb RGBKeyword
+    rgba RGBAKeyword
+    frgb FRGBKeyword
+    frgba FRGBAKeyword
+
+    size
+    texture
+    uv UVKeyword
+    sheet
 }
 
 comments {
