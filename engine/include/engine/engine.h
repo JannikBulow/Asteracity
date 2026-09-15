@@ -16,6 +16,7 @@
 
 #include "engine/sound/audio_device.h"
 
+#include "engine/world/systems/lifetime_system.h"
 #include "engine/world/systems/render_systems.h"
 
 #include "engine/world/tiles/tile_world.h"
@@ -102,6 +103,7 @@ namespace engine {
         std::vector<std::unique_ptr<Scene>> mSceneStack;
 
         std::tuple<
+            LifetimeSystem,
             TileRenderSystem,
             RenderSystem
         > mBuiltinSystems;
