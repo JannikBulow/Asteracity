@@ -123,7 +123,7 @@ namespace formats {
             uint16_t size = readU16();
             std::string value;
             value.resize(size);
-            mIn.readMany(value.data(), size);
+            mIn.readMany(reinterpret_cast<std::byte*>(value.data()), size);
             return value;
         }
 
