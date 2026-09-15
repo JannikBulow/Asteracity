@@ -5,7 +5,7 @@
 
 #include "engine/backend/backend.h"
 
-#include "engine/render/sprite.h"
+#include "../asset/sprite.h"
 
 #include "engine/resource/font.h"
 #include "engine/resource/texture.h"

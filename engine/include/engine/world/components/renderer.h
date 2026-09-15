@@ -3,7 +3,7 @@
 #ifndef ASTERACITY_ENGINE_WORLD_COMPONENTS_RENDERER_H
 #define ASTERACITY_ENGINE_WORLD_COMPONENTS_RENDERER_H
 
-#include "engine/render/sprite.h"
+#include "../../asset/sprite.h"
 
 namespace engine {
     struct SpriteRenderer {

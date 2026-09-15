@@ -73,6 +73,8 @@ find_package(OpenGL REQUIRED)
 option(ASTERACITY_TARGET_MULTITHREADED "Enable/disable certain features such as atomics and internal mutexes to make the engine multithreading safe. Keep off for single threaded usages to improve performance" OFF)
 
 set(SOURCES
+    src/asset/sprite.cpp
+
     src/backends/glfw/input_provider.cpp
     src/backends/glfw/window.cpp
 
@@ -85,7 +87,6 @@ set(SOURCES
 
     src/render/frame_controller.cpp
     src/render/renderer.cpp
-    src/render/sprite.cpp
 
     src/resource/font.cpp
     src/resource/resource_manager.cpp
@@ -112,6 +113,8 @@ set(SOURCES
 )
 
 set(HEADERS
+    include/engine/asset/sprite.h
+
     include/engine/backend/asset_provider.h
     include/engine/backend/audio_device.h
     include/engine/backend/backend.h
@@ -136,7 +139,6 @@ set(HEADERS
     include/engine/render/camera.h
     include/engine/render/frame_controller.h
     include/engine/render/renderer.h
-    include/engine/render/sprite.h
 
     include/engine/resource/font.h
     include/engine/resource/resource_manager.h
