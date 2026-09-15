@@ -31,6 +31,7 @@ namespace assetc {
         void parseTextureOrSheetCommand();
         void parseSizeCommand();
         void parseUVCommand();
+        void parseTintCommand();
     };
 }
 

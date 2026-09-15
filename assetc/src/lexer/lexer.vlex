@@ -27,6 +27,7 @@ tokens assetc {
     texture
     uv UVKeyword
     sheet
+    tint
 }
 
 comments {

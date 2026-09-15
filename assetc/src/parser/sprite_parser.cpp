@@ -35,6 +35,9 @@ namespace assetc {
             case TokenType::UVKeyword:
                 parseUVCommand();
                 break;
+            case TokenType::TintKeyword:
+                parseTintCommand();
+                break;
 
             default:
                 throw util::AssetcException("weird command " + std::string(current().getText()));
@@ -65,5 +68,10 @@ namespace assetc {
     void SpriteParser::parseUVCommand() {
         consume(); // uv
         mProgress.uv = ParseFloatRect(mTokens);
+    }
+
+    void SpriteParser::parseTintCommand() {
+        consume(); // tint
+        mProgress.tint = ParseColor(mTokens);
     }
 }
