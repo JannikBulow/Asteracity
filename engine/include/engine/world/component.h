@@ -15,7 +15,7 @@ namespace engine {
 
         virtual size_t size() const = 0;
         virtual Entity entityAt(size_t index) const = 0;
-        virtual void remove(Entity entity) = 0;
+        virtual void removeSilentFail(Entity entity) = 0;
     };
 
     template<class T>
@@ -43,23 +43,13 @@ namespace engine {
             return mComponents.back();
         }
 
-        void remove(Entity entity) override {
+        void removeSilentFail(Entity entity) override {
+            if (contains(entity)) removeImpl(entity);
+        }
+
+        void remove(Entity entity) {
             if (!contains(entity)) throw util::GameException();
-
-            uint32_t removed = mSparse[entity.index];
-            uint32_t last = mEntities.size() - 1;
-
-            Entity movedEntity = mEntities[last];
-
-            mEntities[removed] = movedEntity;
-            mComponents[removed] = std::move(mComponents[last]);
-
-            mSparse[movedEntity.index] = removed;
-
-            mEntities.pop_back();
-            mComponents.pop_back();
-
-            mSparse[entity.index] = INVALID_DENSE;
+            removeImpl(entity);
         }
 
         bool contains(Entity entity) const {
@@ -83,6 +73,23 @@ namespace engine {
 
         void ensureSparseSize(uint32_t index) {
             if (index >= mSparse.size()) mSparse.resize(static_cast<size_t>(index) + 1, INVALID_DENSE);
+        }
+
+        void removeImpl(Entity entity) {
+            uint32_t removed = mSparse[entity.index];
+            uint32_t last = mEntities.size() - 1;
+
+            Entity movedEntity = mEntities[last];
+
+            mEntities[removed] = movedEntity;
+            mComponents[removed] = std::move(mComponents[last]);
+
+            mSparse[movedEntity.index] = removed;
+
+            mEntities.pop_back();
+            mComponents.pop_back();
+
+            mSparse[entity.index] = INVALID_DENSE;
         }
     };
 
@@ -226,7 +233,7 @@ namespace engine {
 
         void onDestroyEntity(Entity entity) {
             for (auto& storage : mComponentStorages) {
-                if (storage) storage->remove(entity);
+                if (storage) storage->removeSilentFail(entity);
             }
         }
 
