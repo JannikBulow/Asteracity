@@ -5,6 +5,7 @@
 
 #include "assetc/parser/token_stream.h"
 
+#include <file_formats/common/color.h>
 #include <file_formats/common/rect.h>
 #include <file_formats/common/resource.h>
 #include <file_formats/common/size.h>
@@ -15,6 +16,8 @@ namespace assetc {
     int ParseIntegerExpression(TokenStream& tokens);
     int64_t ParseInteger64Expression(TokenStream& tokens);
     float ParseFloatExpression(TokenStream& tokens);
+
+    formats::Color ParseColor(TokenStream& tokens);
 
     formats::IntRect ParseIntRect(TokenStream& tokens);
     formats::FloatRect ParseFloatRect(TokenStream& tokens);

@@ -147,6 +147,112 @@ namespace assetc {
         return ExpressionParser<float>(tokens).parse();
     }
 
+    formats::Color ParseColor(TokenStream& tokens) {
+        switch (tokens.current().getTokenType()) {
+            case TokenType::RGBKeyword: {
+                tokens.consume();
+
+                tokens.expectToken(TokenType::LeftParen);
+                tokens.consume();
+
+                uint8_t r = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                uint8_t g = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                uint8_t b = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::RightParen);
+                tokens.consume();
+
+                return {r, g, b, 255};
+            }
+            case TokenType::RGBAKeyword: {
+                tokens.consume();
+
+                tokens.expectToken(TokenType::LeftParen);
+                tokens.consume();
+
+                uint8_t r = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                uint8_t g = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                uint8_t b = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                uint8_t a = ParseIntegerExpression(tokens);
+                tokens.expectToken(TokenType::RightParen);
+                tokens.consume();
+
+                return {r, g, b, a};
+            }
+            case TokenType::FRGBKeyword: {
+                tokens.consume();
+
+                tokens.expectToken(TokenType::LeftParen);
+                tokens.consume();
+
+                float r = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                float g = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                float b = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::RightParen);
+                tokens.consume();
+
+                return {
+                    static_cast<uint8_t>(r * 255.0f),
+                    static_cast<uint8_t>(g * 255.0f),
+                    static_cast<uint8_t>(b * 255.0f),
+                    255
+                };
+            }
+            case TokenType::FRGBAKeyword: {
+                tokens.consume();
+
+                tokens.expectToken(TokenType::LeftParen);
+                tokens.consume();
+
+                float r = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                float g = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                float b = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::Comma);
+                tokens.consume();
+
+                float a = ParseFloatExpression(tokens);
+                tokens.expectToken(TokenType::RightParen);
+                tokens.consume();
+
+                return {
+                    static_cast<uint8_t>(r * 255.0f),
+                    static_cast<uint8_t>(g * 255.0f),
+                    static_cast<uint8_t>(b * 255.0f),
+                    static_cast<uint8_t>(a * 255.0f)
+                };
+            }
+
+            default:
+                throw util::AssetcException("color");
+        }
+    }
+
     formats::IntRect ParseIntRect(TokenStream& tokens) {
         int left = ParseIntegerExpression(tokens);
         int right = ParseIntegerExpression(tokens);
