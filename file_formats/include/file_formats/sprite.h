@@ -4,50 +4,36 @@
 #define ASTERACITY_FILE_FORMATS_SPRITE_H
 
 #include "file_formats/common/asset_header.h"
+#include "file_formats/common/rect.h"
 #include "file_formats/common/resource.h"
+#include "file_formats/common/size.h"
 
 namespace formats {
     struct Sprite {
         AssetHeader header;
         Resource texture; // or sheet, but a sheet is just a texture with metadata
-        int width;
-        int height;
-        float uvLeft;
-        float uvRight;
-        float uvTop;
-        float uvBottom;
+        IntSize size;
+        FloatRect uv;
 
         template<BinaryOutput Out>
         void serialize(BinaryWriter<Out>& writer) const {
             writer.write(header);
             writer.write(texture);
-            writer.writeU32(width);
-            writer.writeU32(height);
-            writer.writeFloat(uvLeft);
-            writer.writeFloat(uvRight);
-            writer.writeFloat(uvTop);
-            writer.writeFloat(uvBottom);
+            writer.write(size);
+            writer.write(uv);
         }
 
         template<BinaryInput In>
         static Sprite deserialize(BinaryReader<In>& reader) {
             AssetHeader header = reader.template read<AssetHeader>();
             Resource texture = reader.template read<Resource>();
-            int width = reader.readU32();
-            int height = reader.readU32();
-            float uvLeft = reader.readFloat();
-            float uvRight = reader.readFloat();
-            float uvTop = reader.readFloat();
-            float uvBottom = reader.readFloat();
+            IntSize size = reader.template read<IntSize>();
+            FloatRect uv = reader.template read<FloatRect>();
             return {
                 .header = std::move(header),
                 .texture = std::move(texture),
-                .width = width,
-                .height = height,
-                .uvLeft = uvLeft,
-                .uvRight = uvRight,
-                .uvTop = uvTop,
-                .uvBottom = uvBottom,
+                .size = size,
+                .uv = uv,
             };
         }
     };
