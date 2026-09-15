@@ -121,14 +121,28 @@ namespace assetc {
 
                 return value;
             } else if constexpr (std::is_floating_point_v<T>) {
-                expectToken(TokenType::FloatLiteral);
+                T value = T(0);
 
-                std::string_view text = consume().getText();
-                T value = 0;
-                auto [ptr, error] = std::from_chars(text.data(), text.data() + text.size(), value);
-                if (error != std::errc() || ptr != text.data() + text.size()) {
-                    throw util::AssetcException("invalid floating point");
+                if (current().getTokenType() == TokenType::IntegerLiteral) {
+                    std::string_view text = consume().getText();
+
+                    uintmax_t intValue = 0;
+                    auto [ptr, error] = std::from_chars(text.data(), text.data() + text.size(), intValue);
+                    if (error != std::errc() || ptr != text.data() + text.size()) {
+                        throw util::AssetcException("invalid integer (casting to floating point)");
+                    }
+
+                    value = static_cast<T>(intValue);
+                } else {
+                    expectToken(TokenType::FloatLiteral);
+                    std::string_view text = consume().getText();
+
+                    auto [ptr, error] = std::from_chars(text.data(), text.data() + text.size(), value);
+                    if (error != std::errc() || ptr != text.data() + text.size()) {
+                        throw util::AssetcException("invalid floating point");
+                    }
                 }
+
 
                 return value;
             }
