@@ -34,8 +34,8 @@ namespace formats {
 
         template<BinaryOutput Out>
         void serialize(BinaryWriter<Out>& writer) const {
-            writer.writeF32(width);
-            writer.writeF32(height);
+            writer.writeFloat(width);
+            writer.writeFloat(height);
         }
 
         template<BinaryInput In>
