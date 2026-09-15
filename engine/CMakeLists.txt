@@ -101,6 +101,7 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/world/systems/lifetime_system.cpp
     src/world/systems/render_systems.cpp
 
     src/world/tiles/registry.cpp
@@ -160,9 +161,11 @@ set(HEADERS
     include/engine/util/timer.h
     include/engine/util/unicode.h
 
-    include/engine/world/components/transform.h
+    include/engine/world/components/lifetime.h
     include/engine/world/components/renderer.h
+    include/engine/world/components/transform.h
 
+    include/engine/world/systems/lifetime_system.h
     include/engine/world/systems/render_systems.h
 
     include/engine/world/tiles/registry.h
