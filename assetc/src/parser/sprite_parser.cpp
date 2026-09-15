@@ -62,7 +62,7 @@ namespace assetc {
 
     void SpriteParser::parseSizeCommand() {
         consume(); // size
-        mProgress.size = ParseIntSize(mTokens);
+        mProgress.size = ParseFloatSize(mTokens);
     }
 
     void SpriteParser::parseUVCommand() {
