@@ -10,6 +10,7 @@ set(HEADERS
     include/file_formats/binary/binary_writer.h
 
     include/file_formats/common/asset_header.h
+    include/file_formats/common/color.h
     include/file_formats/common/rect.h
     include/file_formats/common/resource.h
     include/file_formats/common/size.h
