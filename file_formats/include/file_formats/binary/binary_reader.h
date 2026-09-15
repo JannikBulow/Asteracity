@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -130,6 +131,16 @@ namespace formats {
         template<Deserializable<BinaryReader> T>
         T read() {
             return T::deserialize(*this);
+        }
+
+        template<Deserializable<BinaryReader> T>
+        std::optional<T> readOptional() {
+            std::optional<T> value = std::nullopt;
+            bool hasValue = readU8() != 0;
+            if (hasValue) {
+                value = read<T>();
+            }
+            return value;
         }
 
     private:

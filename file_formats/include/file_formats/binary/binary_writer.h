@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <optional>
 #include <span>
 #include <stdexcept>
 #include <string_view>
@@ -122,6 +123,12 @@ namespace formats {
         template<Serializable<BinaryWriter> T>
         void write(T value) {
             value.serialize(*this);
+        }
+
+        template<Serializable<BinaryWriter> T>
+        void writeOptional(std::optional<T> value) {
+            writeU8(value.has_value() ? 1 : 0);
+            if (value) write(*value);
         }
 
     private:
