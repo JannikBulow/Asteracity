@@ -3,9 +3,9 @@
 #ifndef ASTERACITY_ENGINE_RENDER_RENDERER_H
 #define ASTERACITY_ENGINE_RENDER_RENDERER_H
 
-#include "engine/backend/backend.h"
+#include "engine/asset/sprite.h"
 
-#include "../asset/sprite.h"
+#include "engine/backend/backend.h"
 
 #include "engine/resource/font.h"
 #include "engine/resource/texture.h"

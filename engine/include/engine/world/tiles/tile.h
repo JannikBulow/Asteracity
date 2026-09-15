@@ -3,7 +3,7 @@
 #ifndef ASTERACITY_ENGINE_WORLD_TILES_TILE_H
 #define ASTERACITY_ENGINE_WORLD_TILES_TILE_H
 
-#include "../../asset/sprite.h"
+#include "engine/asset/sprite.h"
 
 #include <cstdint>
 
