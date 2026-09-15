@@ -3,6 +3,8 @@
 #ifndef ASTERACITY_ENGINE_UTIL_RESOURCE_LOCATION_H
 #define ASTERACITY_ENGINE_UTIL_RESOURCE_LOCATION_H
 
+#include <file_formats/common/resource.h>
+
 #include <filesystem>
 #include <memory>
 
@@ -13,6 +15,8 @@ namespace util {
 
         ResourceLocation(std::string_view resource);
         ResourceLocation(std::string_view domain, std::string_view resource);
+
+        ResourceLocation(const formats::Resource& resource);
 
         bool operator==(const ResourceLocation& other) const;
 

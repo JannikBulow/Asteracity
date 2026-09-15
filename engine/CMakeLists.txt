@@ -73,6 +73,7 @@ find_package(OpenGL REQUIRED)
 option(ASTERACITY_TARGET_MULTITHREADED "Enable/disable certain features such as atomics and internal mutexes to make the engine multithreading safe. Keep off for single threaded usages to improve performance" OFF)
 
 set(SOURCES
+    src/asset/asset_manager.cpp
     src/asset/sprite.cpp
 
     src/backends/glfw/input_provider.cpp
@@ -113,6 +114,7 @@ set(SOURCES
 )
 
 set(HEADERS
+    include/engine/asset/asset_manager.h
     include/engine/asset/sprite.h
 
     include/engine/backend/asset_provider.h
@@ -196,6 +198,7 @@ target_compile_features(asteracity-engine PUBLIC cxx_std_20)
 
 target_link_libraries(asteracity-engine
     PUBLIC
+        asteracity-file-formats
         glfw
         OpenGL::GL
         glad_gl_core_33

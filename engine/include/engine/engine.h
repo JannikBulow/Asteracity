@@ -3,6 +3,8 @@
 #ifndef ASTERACITY_ENGINE_ENGINE_H
 #define ASTERACITY_ENGINE_ENGINE_H
 
+#include "engine/asset/asset_manager.h"
+
 #include "engine/backend/backend.h"
 
 #include "engine/render/frame_controller.h"
@@ -52,12 +54,14 @@ namespace engine {
         FrameController& frameController() { return mFrameController; }
         Renderer& renderer() { return mRenderer; }
         ResourceManager& resourceManager() { return mResourceManager; }
+        AssetManager& assetManager() { return mAssetManager; }
         AudioDevice& audioDevice() { return mAudioDevice; }
         TileRegistry& tileRegistry() { return mTileRegistry; }
 
         const FrameController& frameController() const { return mFrameController; }
         const Renderer& renderer() const { return mRenderer; }
         const ResourceManager& resourceManager() const { return mResourceManager; }
+        const AssetManager& assetManager() const { return mAssetManager; }
         const AudioDevice& audioDevice() const { return mAudioDevice; }
         const TileRegistry& tileRegistry() const { return mTileRegistry; }
 
@@ -88,6 +92,7 @@ namespace engine {
 
         FrameController mFrameController;
         ResourceManager mResourceManager;
+        AssetManager mAssetManager;
         Renderer mRenderer;
         AudioDevice mAudioDevice;
         TileRegistry mTileRegistry;

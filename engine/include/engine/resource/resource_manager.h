@@ -14,6 +14,7 @@
 #include <unordered_map>
 
 namespace engine {
+    // resources are things of data with proper lifetime management due to them being potentially slow to load
     class ResourceManager {
         friend struct FontResource;
         friend struct SoundResource;

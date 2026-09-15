@@ -1,0 +1,7 @@
+version 1
+
+sprite "grass_1"
+
+texture resource("images/grass_1.png")
+
+size 1 1

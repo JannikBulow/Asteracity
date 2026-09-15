@@ -8,6 +8,7 @@ namespace engine {
         , mBackend(mOwningBackend)
         , mFrameController(mBackend)
         , mResourceManager(mBackend)
+        , mAssetManager(mResourceManager)
         , mRenderer(mBackend)
         , mAudioDevice(mBackend) {}
 
@@ -15,6 +16,7 @@ namespace engine {
         : mBackend(backend)
         , mFrameController(mBackend)
         , mResourceManager(mBackend)
+        , mAssetManager(mResourceManager)
         , mRenderer(mBackend)
         , mAudioDevice(mBackend) {}
 

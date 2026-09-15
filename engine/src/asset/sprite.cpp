@@ -1,6 +1,6 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#include "../../include/engine/asset/sprite.h"
+#include "engine/asset/sprite.h"
 
 namespace engine {
     Sprite::Sprite(Texture texture, math::Vec2 size, std::optional<math::Rect> pixelBounds, math::Color tint)
