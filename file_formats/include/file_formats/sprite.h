@@ -13,7 +13,7 @@ namespace formats {
     struct Sprite {
         AssetHeader header;
         Resource texture; // or sheet, but a sheet is just a texture with metadata
-        IntSize size;
+        FloatSize size;
         FloatRect uv;
         Color tint{255, 255, 255, 255};
 
@@ -30,7 +30,7 @@ namespace formats {
         static Sprite deserialize(BinaryReader<In>& reader) {
             AssetHeader header = reader.template read<AssetHeader>();
             Resource texture = reader.template read<Resource>();
-            IntSize size = reader.template read<IntSize>();
+            FloatSize size = reader.template read<FloatSize>();
             FloatRect uv = reader.template read<FloatRect>();
             Color tint = reader.template read<Color>();
             return {
