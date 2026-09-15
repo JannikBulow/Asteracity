@@ -14,7 +14,7 @@ namespace formats {
         AssetHeader header;
         Resource texture; // or sheet, but a sheet is just a texture with metadata
         FloatSize size;
-        FloatRect uv;
+        std::optional<FloatRect> uv;
         Color tint{255, 255, 255, 255};
 
         template<BinaryOutput Out>
@@ -22,7 +22,7 @@ namespace formats {
             writer.write(header);
             writer.write(texture);
             writer.write(size);
-            writer.write(uv);
+            writer.writeOptional(uv);
             writer.write(tint);
         }
 
@@ -31,7 +31,7 @@ namespace formats {
             AssetHeader header = reader.template read<AssetHeader>();
             Resource texture = reader.template read<Resource>();
             FloatSize size = reader.template read<FloatSize>();
-            FloatRect uv = reader.template read<FloatRect>();
+            std::optional<FloatRect> uv = reader.template readOptional<FloatRect>();
             Color tint = reader.template read<Color>();
             return {
                 .header = std::move(header),
