@@ -30,6 +30,28 @@ enum class Action {
     Count
 };
 
+struct MovementComponent {};
+
+class MovementSystem : public engine::ISystem {
+public:
+    explicit MovementSystem(engine::InputHandler<Action>& inputHandler)
+        : mInputHandler(inputHandler) {}
+
+    void update(engine::Engine& engine, float dt) override {
+        mInputHandler.update();
+
+        for (auto [entity, transform, movement] : engine.activeScene().world().viewEntities<engine::Transform, MovementComponent>()) {
+            if (mInputHandler.isDown(Action::Up)) transform.position.y += 10.0f * dt;
+            if (mInputHandler.isDown(Action::Down)) transform.position.y -= 10.0f * dt;
+            if (mInputHandler.isDown(Action::Left)) transform.position.x -= 10.0f * dt;
+            if (mInputHandler.isDown(Action::Right)) transform.position.x += 10.0f * dt;
+        }
+    }
+
+private:
+    engine::InputHandler<Action>& mInputHandler;
+};
+
 int main(int argc, char** argv) {
     engine::Engine engine({
         .window = {
@@ -49,6 +71,8 @@ int main(int argc, char** argv) {
     input.setKeybind(Action::Left, engine::Key::A);
     input.setKeybind(Action::Right, engine::Key::D);
 
+    engine.addSystem(std::make_unique<MovementSystem>(input));
+
     engine::Sprite rat = engine.assetManager().loadSprite({"sprites/rat.sprite"});
     engine::Sprite black = engine.assetManager().loadSprite({"sprites/black.sprite"});
     engine::Sprite grass1 = engine.assetManager().loadSprite({"sprites/grass_1.sprite"});
@@ -66,17 +90,11 @@ int main(int argc, char** argv) {
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
     world.addComponent<engine::Transform>(playerEntity);
+    world.addComponent<MovementComponent>(playerEntity);
 
     auto& playerTransform = *world.getComponent<engine::Transform>(playerEntity);
 
     engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&input, &playerTransform](engine::Engine& engine, float dt) {
-        input.update();
-
-        if (input.isDown(Action::Up)) playerTransform.position.y += 10.0f * dt;
-        if (input.isDown(Action::Down)) playerTransform.position.y -= 10.0f * dt;
-        if (input.isDown(Action::Left)) playerTransform.position.x -= 10.0f * dt;
-        if (input.isDown(Action::Right)) playerTransform.position.x += 10.0f * dt;
-
         engine.activeScene().activeCamera().position = playerTransform.position;
     });
 
