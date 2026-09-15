@@ -7,6 +7,7 @@
 
 #include "assetc/util/exceptions.h"
 
+#include <format>
 #include <vector>
 
 namespace assetc {
@@ -24,7 +25,7 @@ namespace assetc {
 
         void expectToken(TokenType type) const {
             if (current().getTokenType() != type) {
-                throw util::AssetcException("expectTokenType");
+                throw util::AssetcException(std::format("expected {}, got {}", Token("", type, {}, {}).getName(), current().getName()));
             }
         }
 
