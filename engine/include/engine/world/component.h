@@ -110,7 +110,7 @@ namespace engine {
 
             auto operator*() const {
                 Entity entity = mView.baseEntity(mIndex);
-                return std::tuple{
+                return std::tuple<Entity, Components&...>{
                     entity,
                     mView.template get<Components>(entity)...
                 };
