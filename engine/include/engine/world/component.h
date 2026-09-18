@@ -3,6 +3,8 @@
 #ifndef ASTERACITY_ENGINE_WORLD_COMPONENT_H
 #define ASTERACITY_ENGINE_WORLD_COMPONENT_H
 
+#include "engine/util/object_allocator.h"
+
 #include "engine/world/entity.h"
 
 #include <memory>
@@ -22,25 +24,23 @@ namespace engine {
     requires(std::is_move_constructible_v<T>)
     class ComponentStorage : public IComponentStorage {
     public:
-        size_t size() const override { return mEntities.size(); }
+        size_t size() const override { return mDense.size(); }
 
         Entity entityAt(size_t index) const override {
-            return mEntities[index];
+            return mDense[index].entity;
         }
 
-        T& add(Entity entity, T component = {}) {
+        T& add(Entity entity, T value = {}) {
             if (contains(entity)) throw util::GameException();
 
-            uint32_t dense = mEntities.size();
-
-            mEntities.push_back(entity);
-            mComponents.push_back(std::move(component));
+            T* component = mComponentAllocator.create(std::move(value));
+            uint32_t dense = mDense.size();
+            mDense.emplace_back(entity, component);
 
             ensureSparseSize(entity.index);
-
             mSparse[entity.index] = dense;
 
-            return mComponents.back();
+            return *component;
         }
 
         void removeSilentFail(Entity entity) override {
@@ -56,20 +56,25 @@ namespace engine {
             if (entity.index >= mSparse.size()) return false;
 
             uint32_t dense = mSparse[entity.index];
-            return dense != INVALID_DENSE && mEntities[dense] == entity;
+            return dense != INVALID_DENSE && mDense[dense].entity == entity;
         }
 
         T* get(Entity entity) {
             if (!contains(entity)) return nullptr;
-            return &mComponents[mSparse[entity.index]];
+            return mDense[mSparse[entity.index]].component;
         }
 
     private:
+        struct DenseEntity {
+            Entity entity;
+            T* component;
+        };
+
         static constexpr uint32_t INVALID_DENSE = std::numeric_limits<uint32_t>::max();
 
-        std::vector<Entity> mEntities;
-        std::vector<T> mComponents;
+        std::vector<DenseEntity> mDense;
         std::vector<uint32_t> mSparse;
+        util::ObjectAllocator<T> mComponentAllocator;
 
         void ensureSparseSize(uint32_t index) {
             if (index >= mSparse.size()) mSparse.resize(static_cast<size_t>(index) + 1, INVALID_DENSE);
@@ -77,18 +82,17 @@ namespace engine {
 
         void removeImpl(Entity entity) {
             uint32_t removed = mSparse[entity.index];
-            uint32_t last = mEntities.size() - 1;
+            uint32_t last = mDense.size() - 1;
 
-            Entity movedEntity = mEntities[last];
+            DenseEntity moved = std::move(mDense[last]);
 
-            mEntities[removed] = movedEntity;
-            mComponents[removed] = std::move(mComponents[last]);
+            T* component = mDense[removed].component;
 
-            mSparse[movedEntity.index] = removed;
+            mDense[removed] = std::move(moved);
+            mSparse[moved.entity.index] = removed;
+            mDense.pop_back();
 
-            mEntities.pop_back();
-            mComponents.pop_back();
-
+            mComponentAllocator.destroy(component);
             mSparse[entity.index] = INVALID_DENSE;
         }
     };
