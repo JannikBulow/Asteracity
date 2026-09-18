@@ -88,13 +88,11 @@ int main(int argc, char** argv) {
     engine::World& world = engine.activeScene().world();
 
     engine::Entity playerEntity = world.createEntity();
+    auto& playerTransform = world.addComponent<engine::Transform>(playerEntity);
     world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
-    world.addComponent<engine::Transform>(playerEntity);
     world.addComponent<MovementComponent>(playerEntity);
 
-    auto& playerTransform = *world.getComponent<engine::Transform>(playerEntity);
-
-    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&input, &playerTransform](engine::Engine& engine, float dt) {
+    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&playerTransform](engine::Engine& engine, float dt) {
         engine.activeScene().activeCamera().position = playerTransform.position;
     });
 
