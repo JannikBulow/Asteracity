@@ -14,6 +14,7 @@
 
 #include <engine/input/input_handler.h>
 
+#include <engine/world/components/camera.h>
 #include <engine/world/components/renderer.h>
 #include <engine/world/components/transform.h>
 
@@ -88,13 +89,10 @@ int main(int argc, char** argv) {
     engine::World& world = engine.activeScene().world();
 
     engine::Entity playerEntity = world.createEntity();
-    auto& playerTransform = world.addComponent<engine::Transform>(playerEntity);
+    world.addComponent<engine::CameraComponent>(playerEntity, engine.activeScene().getActiveCamera());
+    world.addComponent<engine::Transform>(playerEntity);
     world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
     world.addComponent<MovementComponent>(playerEntity);
-
-    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [&playerTransform](engine::Engine& engine, float dt) {
-        engine.activeScene().activeCamera().position = playerTransform.position;
-    });
 
      return engine.main(argc, argv);
 }
