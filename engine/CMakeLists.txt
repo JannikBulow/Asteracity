@@ -101,6 +101,7 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/world/systems/camera_system.cpp
     src/world/systems/lifetime_system.cpp
     src/world/systems/render_systems.cpp
 
@@ -166,6 +167,7 @@ set(HEADERS
     include/engine/world/components/renderer.h
     include/engine/world/components/transform.h
 
+    include/engine/world/systems/camera_system.h
     include/engine/world/systems/lifetime_system.h
     include/engine/world/systems/render_systems.h
 
