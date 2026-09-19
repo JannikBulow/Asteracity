@@ -161,6 +161,7 @@ set(HEADERS
     include/engine/util/timer.h
     include/engine/util/unicode.h
 
+    include/engine/world/components/camera.h
     include/engine/world/components/lifetime.h
     include/engine/world/components/renderer.h
     include/engine/world/components/transform.h
