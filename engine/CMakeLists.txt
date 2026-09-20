@@ -145,6 +145,7 @@ set(HEADERS
     include/engine/render/renderer.h
 
     include/engine/resource/font.h
+    include/engine/resource/reclaim_node.h
     include/engine/resource/resource_manager.h
     include/engine/resource/sampler_descriptor.h
     include/engine/resource/sound.h

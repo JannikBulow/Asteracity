@@ -11,6 +11,7 @@
 
 #include "engine/util/object_allocator.h"
 
+#include <chrono>
 #include <unordered_map>
 
 namespace engine {
@@ -44,7 +45,28 @@ namespace engine {
         Sound createSound(util::ResourceLocation location);
         Texture createTexture(util::ResourceLocation location, std::optional<SamplerDescriptor> sampler = std::nullopt);
 
+        //TODO: remake the automatic eviction system to also allow evicting currently referenced resources if pressure is severe
+        template<class Clock>
+        void update(Clock::duration budget) {
+            auto start = Clock::now();
+            auto deadline = start + budget;
+
+            while (Clock::now() < deadline) {
+                if (!reclaimStep()) break;
+            }
+        }
+
     private:
+        struct LRUCache {
+            ReclaimNode* head = nullptr;
+            ReclaimNode* tail = nullptr;
+
+            bool empty();
+
+            void insert(ReclaimNode* node);
+            void remove(ReclaimNode* node);
+        };
+
         struct TextureKey {
             util::ResourceLocation location;
             std::optional<SamplerDescriptor> samplerDesc;
@@ -101,22 +123,33 @@ namespace engine {
         MemoryProfile mCPUMemoryProfile{};
         MemoryProfile mGPUMemoryProfile{};
 
+        LRUCache mCPUReclaimCache;
+        LRUCache mGPUReclaimCache;
+
         std::unordered_map<SamplerDescriptor, backend::SamplerHandle> mSamplers;
 
         std::unordered_map<FontKey, FontResource, FontKey::Hash> mFonts;
         std::unordered_map<util::ResourceLocation, SoundResource> mSounds;
         std::unordered_map<TextureKey, TextureResource, TextureKey::Hash> mTextures;
 
+        bool reclaimStep();
+
+        void reclaim(ReclaimNode* node);
+
+        std::pair<LRUCache*, ReclaimNode*> chooseReclaimCandidate();
+        std::pair<LRUCache*, ReclaimNode*> chooseCPUReclaimCandidate();
+        std::pair<LRUCache*, ReclaimNode*> chooseGPUReclaimCandidate();
+
         backend::SamplerHandle getSampler(SamplerDescriptor desc);
 
-        void markUsed(const FontResource& resource);
-        void markUnused(const FontResource& resource);
+        void markUsed(FontResource& resource);
+        void markUnused(FontResource& resource);
 
-        void markUsed(const SoundResource& resource);
-        void markUnused(const SoundResource& resource);
+        void markUsed(SoundResource& resource);
+        void markUnused(SoundResource& resource);
 
-        void markUsed(const TextureResource& resource);
-        void markUnused(const TextureResource& resource);
+        void markUsed(TextureResource& resource);
+        void markUnused(TextureResource& resource);
 
         // these don't check for existing values or auto destroy and will cause memory leaks if used incorrectly
 

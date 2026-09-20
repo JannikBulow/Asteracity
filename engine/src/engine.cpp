@@ -69,6 +69,10 @@ namespace engine {
                     preUpdate(dt);
                     update(dt);
                     postUpdate(dt);
+
+                    using Clock = std::remove_cvref_t<decltype(mFrameController.timer())>::Clock;
+                    using namespace std::chrono_literals;
+                    mResourceManager.update<Clock>(mFrameController.timer().timeUntilNextFrame() - 10us);
                 },
                 [this, &activeCamera](float dt) {
                     mRenderer.clear(activeCamera.backgroundColor);

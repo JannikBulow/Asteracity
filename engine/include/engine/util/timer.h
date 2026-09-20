@@ -57,6 +57,19 @@ namespace util {
         float getLimit() const { return mLimit; }
         void setLimit(float limit) { mLimit = std::max(limit, 0.0f); }
 
+        Clock::duration timeUntilNextFrame() const {
+            if (!mStarted || mLimit <= 0.0f)
+                return Clock::duration::zero();
+
+            const auto target = std::chrono::duration<double>(1.0 / mLimit);
+            const auto elapsed = Clock::now() - mLastLimitTime;
+
+            if (elapsed >= target)
+                return Clock::duration::zero();
+
+            return std::chrono::duration_cast<typename Clock::duration>(target - elapsed);
+        }
+
         void waitForLimit() {
             if (!mStarted || mLimit <= 0.0f) return;
 

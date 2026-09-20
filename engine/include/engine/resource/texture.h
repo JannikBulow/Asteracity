@@ -5,6 +5,7 @@
 
 #include "engine/backend/graphics_device.h"
 
+#include "engine/resource/reclaim_node.h"
 #include "engine/resource/sampler_descriptor.h"
 
 #include "engine/util/resource_location.h"
@@ -17,6 +18,19 @@ namespace engine {
     class ResourceManager;
 
     struct TextureResource {
+        ReclaimNode cpuReclaimNode = {
+            .value = {
+                .resource = this,
+                .kind = ReclaimKind::TextureCPU
+            }
+        };
+        ReclaimNode gpuReclaimNode = {
+            .value = {
+                .resource = this,
+                .kind = ReclaimKind::TextureGPU
+            }
+        };
+
         ResourceManager* resourceManager;
 
         const util::ResourceLocation* location;

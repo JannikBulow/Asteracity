@@ -2,12 +2,14 @@
 
 #include "engine/resource/resource_manager.h"
 
+#include <ranges>
+
 namespace engine {
     ResourceManager::ResourceManager(backend::Backend& backend)
         : mBackend(backend) {}
 
     ResourceManager::~ResourceManager() {
-        for (auto& [desc, sampler] : mSamplers) {
+        for (auto& sampler : mSamplers | std::views::values) {
             mBackend.gpu.destroySampler(sampler);
         }
     }
@@ -55,6 +57,113 @@ namespace engine {
         return Texture(&it2->second);
     }
 
+    bool ResourceManager::LRUCache::empty() {
+        return head == nullptr;
+    }
+
+    void ResourceManager::LRUCache::insert(ReclaimNode* node) {
+        if (head) {
+            node->next = head;
+            head->prev = node;
+            head = node;
+        } else {
+            head = node;
+            tail = node;
+            node->next = nullptr;
+            node->prev = nullptr;
+        }
+    }
+
+    void ResourceManager::LRUCache::remove(ReclaimNode* node) {
+        if (node->prev) {
+            node->prev->next = node->next;
+        } else {
+            head = node->next;
+        }
+        if (node->next) {
+            node->next->prev = node->prev;
+        } else {
+            tail = node->prev;
+        }
+    }
+
+    bool ResourceManager::reclaimStep() {
+        auto [candidateCache, candidate] = chooseReclaimCandidate();
+        if (!candidateCache) return false;
+
+        candidateCache->remove(candidate);
+        reclaim(candidate);
+
+        return true;
+    }
+
+    void ResourceManager::reclaim(ReclaimNode* node) {
+        switch (node->value.kind) {
+            case ReclaimKind::FontCPU: {
+                FontResource* font = static_cast<FontResource*>(node->value.resource);
+                evictFontCPU(*font);
+                break;
+            }
+            case ReclaimKind::FontGPU: {
+                FontResource* font = static_cast<FontResource*>(node->value.resource);
+                evictFontGPU(*font);
+                break;
+            }
+            case ReclaimKind::SoundCPU: {
+                SoundResource* sound = static_cast<SoundResource*>(node->value.resource);
+                evictSound(*sound);
+                break;
+            }
+            case ReclaimKind::TextureCPU: {
+                TextureResource* texture = static_cast<TextureResource*>(node->value.resource);
+                evictTextureCPU(*texture);
+                break;
+            }
+            case ReclaimKind::TextureGPU: {
+                TextureResource* texture = static_cast<TextureResource*>(node->value.resource);
+                evictTextureGPU(*texture);
+                break;
+            }
+        }
+    }
+
+    std::pair<ResourceManager::LRUCache*, ReclaimNode*> ResourceManager::chooseReclaimCandidate() {
+        double cpuPressure = mCPUMemoryProfile.memoryPressure();
+        double gpuPressure = mGPUMemoryProfile.memoryPressure();
+
+        bool shouldReclaimCPU = cpuPressure >= 0.80;
+        bool shouldReclaimGPU = gpuPressure >= 0.80;
+
+        if (!shouldReclaimCPU && !shouldReclaimGPU) return {nullptr, nullptr};
+
+        if (shouldReclaimCPU && shouldReclaimGPU) {
+            if (cpuPressure > gpuPressure) {
+                auto candidate = chooseCPUReclaimCandidate();
+                if (candidate.first) return candidate;
+            }
+            auto candidate = chooseGPUReclaimCandidate();
+            if (candidate.first) return candidate;
+        }
+
+        if (shouldReclaimCPU) {
+            auto candidate = chooseCPUReclaimCandidate();
+            if (candidate.first) return candidate;
+        }
+        return chooseGPUReclaimCandidate();
+    }
+
+    std::pair<ResourceManager::LRUCache*, ReclaimNode*> ResourceManager::chooseCPUReclaimCandidate() {
+        if (!mCPUReclaimCache.empty()) return {&mCPUReclaimCache, mCPUReclaimCache.head};
+
+        return {nullptr, nullptr};
+    }
+
+    std::pair<ResourceManager::LRUCache*, ReclaimNode*> ResourceManager::chooseGPUReclaimCandidate() {
+        if (!mGPUReclaimCache.empty()) return {&mGPUReclaimCache, mGPUReclaimCache.head};
+
+        return {nullptr, nullptr};
+    }
+
     backend::SamplerHandle ResourceManager::getSampler(SamplerDescriptor desc) {
         auto it = mSamplers.find(desc);
         if (it != mSamplers.end()) return it->second;
@@ -66,32 +175,77 @@ namespace engine {
         return sampler;
     }
 
-    void ResourceManager::markUsed(const FontResource& resource) {
-        if (resource.font) mCPUMemoryProfile.potentialReclaimable -= resource.font->getSizeBytes();
-        if (resource.textureHandle) mGPUMemoryProfile.potentialReclaimable -= resource.estimatedTextureSize;
+    void ResourceManager::markUsed(FontResource& resource) {
+        if (resource.font) {
+            size_t size = resource.font->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable -= size;
+            mCPUReclaimCache.remove(&resource.cpuReclaimNode);
+        }
+        if (resource.textureHandle) {
+            size_t size = resource.estimatedTextureSize;
+            mGPUMemoryProfile.potentialReclaimable -= size;
+            mGPUReclaimCache.remove(&resource.gpuReclaimNode);
+        }
     }
 
-    void ResourceManager::markUnused(const FontResource& resource) {
-        if (resource.font) mCPUMemoryProfile.potentialReclaimable += resource.font->getSizeBytes();
-        if (resource.textureHandle) mGPUMemoryProfile.potentialReclaimable += resource.estimatedTextureSize;
+    void ResourceManager::markUnused(FontResource& resource) {
+        if (resource.font) {
+            size_t size = resource.font->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable += size;
+            resource.cpuReclaimNode.value.size = size;
+            mCPUReclaimCache.insert(&resource.cpuReclaimNode);
+        }
+        if (resource.textureHandle) {
+            size_t size = resource.estimatedTextureSize;
+            mGPUMemoryProfile.potentialReclaimable += size;
+            resource.gpuReclaimNode.value.size = size;
+            mGPUReclaimCache.insert(&resource.gpuReclaimNode);
+        }
     }
 
-    void ResourceManager::markUsed(const SoundResource& resource) {
-        if (resource.audio) mCPUMemoryProfile.potentialReclaimable -= resource.audio->getSizeBytes();
+    void ResourceManager::markUsed(SoundResource& resource) {
+        if (resource.audio) {
+            size_t size = resource.audio->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable -= size;
+            mCPUReclaimCache.remove(&resource.cpuReclaimNode);
+        }
     }
 
-    void ResourceManager::markUnused(const SoundResource& resource) {
-        if (resource.audio) mCPUMemoryProfile.potentialReclaimable += resource.audio->getSizeBytes();
+    void ResourceManager::markUnused(SoundResource& resource) {
+        if (resource.audio) {
+            size_t size = resource.audio->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable += size;
+            resource.cpuReclaimNode.value.size = size;
+            mCPUReclaimCache.insert(&resource.cpuReclaimNode);
+        }
     }
 
-    void ResourceManager::markUsed(const TextureResource& resource) {
-        if (resource.image) mCPUMemoryProfile.potentialReclaimable -= resource.image->getSizeBytes();
-        if (resource.textureHandle) mGPUMemoryProfile.potentialReclaimable -= resource.estimatedTextureSize;
+    void ResourceManager::markUsed(TextureResource& resource) {
+        if (resource.image) {
+            size_t size = resource.image->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable -= size;
+            mCPUReclaimCache.remove(&resource.cpuReclaimNode);
+        }
+        if (resource.textureHandle) {
+            size_t size = resource.estimatedTextureSize;
+            mGPUMemoryProfile.potentialReclaimable -= size;
+            mGPUReclaimCache.remove(&resource.gpuReclaimNode);
+        }
     }
 
-    void ResourceManager::markUnused(const TextureResource& resource) {
-        if (resource.image) mCPUMemoryProfile.potentialReclaimable += resource.image->getSizeBytes();
-        if (resource.textureHandle) mGPUMemoryProfile.potentialReclaimable += resource.estimatedTextureSize;
+    void ResourceManager::markUnused(TextureResource& resource) {
+        if (resource.image) {
+            size_t size = resource.image->getSizeBytes();
+            mCPUMemoryProfile.potentialReclaimable += size;
+            resource.cpuReclaimNode.value.size = size;
+            mCPUReclaimCache.insert(&resource.cpuReclaimNode);
+        }
+        if (resource.textureHandle) {
+            size_t size = resource.estimatedTextureSize;
+            mGPUMemoryProfile.potentialReclaimable += size;
+            resource.gpuReclaimNode.value.size = size;
+            mGPUReclaimCache.insert(&resource.gpuReclaimNode);
+        }
     }
 
     void ResourceManager::realizeFontCPU(FontResource& resource) {
@@ -110,11 +264,17 @@ namespace engine {
     }
 
     void ResourceManager::evictFontCPU(FontResource& resource) {
+        mCPUMemoryProfile.used -= resource.font->getSizeBytes();
+        if (resource.strongReferences == 0) mCPUMemoryProfile.potentialReclaimable -= resource.font->getSizeBytes();
+
         mBackend.assetProvider.unloadFont(*resource.font);
         resource.font = std::nullopt;
     }
 
     void ResourceManager::evictFontGPU(FontResource& resource) {
+        mGPUMemoryProfile.used -= resource.estimatedTextureSize;
+        if (resource.strongReferences == 0) mGPUMemoryProfile.potentialReclaimable -= resource.estimatedTextureSize;
+
         mBackend.gpu.destroyTexture(resource.textureHandle);
         resource.textureHandle = nullptr;
         resource.estimatedTextureSize = 0;
@@ -126,6 +286,9 @@ namespace engine {
     }
 
     void ResourceManager::evictSound(SoundResource& resource) {
+        mCPUMemoryProfile.used -= resource.audio->getSizeBytes();
+        if (resource.strongReferences == 0) mCPUMemoryProfile.potentialReclaimable -= resource.audio->getSizeBytes();
+
         mBackend.assetProvider.unloadAudio(*resource.audio);
         resource.audio = std::nullopt;
     }
@@ -166,11 +329,17 @@ namespace engine {
     }
 
     void ResourceManager::evictTextureCPU(TextureResource& resource) {
+        mCPUMemoryProfile.used -= resource.image->getSizeBytes();
+        if (resource.strongReferences == 0) mCPUMemoryProfile.potentialReclaimable -= resource.image->getSizeBytes();
+
         mBackend.assetProvider.unloadImage(*resource.image);
         resource.image = std::nullopt;
     }
 
     void ResourceManager::evictTextureGPU(TextureResource& resource) {
+        mGPUMemoryProfile.used -= resource.estimatedTextureSize;
+        if (resource.strongReferences == 0) mGPUMemoryProfile.potentialReclaimable -= resource.estimatedTextureSize;
+
         mBackend.gpu.destroyTexture(resource.textureHandle);
         resource.textureHandle = nullptr;
         resource.estimatedTextureSize = 0; // safety to catch bugs from using texture size after evict

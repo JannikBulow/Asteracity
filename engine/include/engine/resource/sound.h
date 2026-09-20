@@ -5,6 +5,8 @@
 
 #include "engine/backend/asset_provider.h"
 
+#include "engine/resource/reclaim_node.h"
+
 #include "engine/util/resource_location.h"
 
 #include "engine/compile_options.h"
@@ -15,6 +17,13 @@ namespace engine {
     class ResourceManager;
 
     struct SoundResource {
+        ReclaimNode cpuReclaimNode = {
+            .value = {
+                .resource = this,
+                .kind = ReclaimKind::SoundCPU
+            }
+        };
+
         ResourceManager* resourceManager;
 
         const util::ResourceLocation* location;
