@@ -156,6 +156,7 @@ set(HEADERS
 
     include/engine/util/exceptions.h
     include/engine/util/handle.h
+    include/engine/util/lru_node.h
     include/engine/util/math.h
     include/engine/util/object_allocator.h
     include/engine/util/resource_location.h
