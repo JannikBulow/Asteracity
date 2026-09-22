@@ -80,9 +80,15 @@ int main(int argc, char** argv) {
 
     engine.tileRegistry().registerTile(0, {std::move(black)});
     engine.tileRegistry().registerTile(1, {std::move(grass1)});
+    engine.tileRegistry().registerTile(2, {rat});
 
-    auto scene = std::make_unique<engine::Scene>(engine.tileRegistry(), math::Vec2I{50, 50});
-    scene->tileWorld().get({0, 0}).id = 1;
+    auto scene = std::make_unique<engine::Scene>(engine.tileRegistry(), math::Vec2I{11, 11});
+
+    for (int x = -5; x <= 5; x++) {
+        for (int y = -5; y <= 5; y++) {
+            scene->tileWorld().get({x, y}).id = (x + y) % 2 == 0 ? 1 : 2;
+        }
+    }
 
     engine.pushScene(std::move(scene));
 
