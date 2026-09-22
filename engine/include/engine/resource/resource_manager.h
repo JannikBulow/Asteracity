@@ -61,7 +61,7 @@ namespace engine {
             ReclaimNode* head = nullptr;
             ReclaimNode* tail = nullptr;
 
-            bool empty();
+            bool empty() const;
 
             void insert(ReclaimNode* node);
             void remove(ReclaimNode* node);

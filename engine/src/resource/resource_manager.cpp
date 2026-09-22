@@ -2,11 +2,17 @@
 
 #include "engine/resource/resource_manager.h"
 
+#include <libos/memory.h>
+
 #include <ranges>
 
 namespace engine {
     ResourceManager::ResourceManager(backend::Backend& backend)
-        : mBackend(backend) {}
+        : mBackend(backend) {
+        mCPUMemoryProfile.limit = os_mem_getphysicalavailable() / 2;
+        auto videoMemoryInfo = backend.gpu.getVideoMemoryInfo();
+        mGPUMemoryProfile.limit = videoMemoryInfo ? videoMemoryInfo->available : 1 * 1024 * 1024 * 1024;
+    }
 
     ResourceManager::~ResourceManager() {
         for (auto& sampler : mSamplers | std::views::values) {
@@ -57,7 +63,7 @@ namespace engine {
         return Texture(&it2->second);
     }
 
-    bool ResourceManager::LRUCache::empty() {
+    bool ResourceManager::LRUCache::empty() const {
         return head == nullptr;
     }
 
@@ -131,8 +137,12 @@ namespace engine {
         double cpuPressure = mCPUMemoryProfile.memoryPressure();
         double gpuPressure = mGPUMemoryProfile.memoryPressure();
 
+        /*
         bool shouldReclaimCPU = cpuPressure >= 0.80;
         bool shouldReclaimGPU = gpuPressure >= 0.80;
+        */
+        bool shouldReclaimCPU = true;
+        bool shouldReclaimGPU = true;
 
         if (!shouldReclaimCPU && !shouldReclaimGPU) return {nullptr, nullptr};
 
