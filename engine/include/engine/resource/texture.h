@@ -93,6 +93,10 @@ namespace engine {
             return *this;
         }
 
+        bool operator==(const Texture& other) const {
+            return mResource == other.mResource;
+        }
+
         backend::Image image() const {
             mResource->ensureCPUResidence();
             return mResource->image.value();
