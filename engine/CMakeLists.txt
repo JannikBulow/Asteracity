@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 3.26)
 include(FetchContent)
 
 FetchContent_Declare(
+    libos
+    GIT_REPOSITORY https://github.com/JannikBulow/libos
+    GIT_TAG master
+)
+
+FetchContent_Declare(
     glfw
     GIT_REPOSITORY https://github.com/glfw/glfw
     GIT_TAG 3.5.1
@@ -32,6 +38,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(
+    libos
     glfw
     glad
 )
@@ -207,6 +214,7 @@ target_compile_features(asteracity-engine PUBLIC cxx_std_20)
 target_link_libraries(asteracity-engine
     PUBLIC
         asteracity-file-formats
+        libos-static
         glfw
         OpenGL::GL
         glad_gl_core_33
