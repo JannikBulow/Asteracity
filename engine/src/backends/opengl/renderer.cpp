@@ -43,10 +43,6 @@ namespace backend {
         , mRectBatch(*this)
         , mTextureBatch(*this)
         , mRenderQueue({&mRectPipeline, &mTexturePipeline, &mFontPipeline}, {&mRectBatch, &mTextureBatch}) {
-        if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress))) {
-            throw util::GameException();
-        }
-
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(GLDebugCallback, nullptr);

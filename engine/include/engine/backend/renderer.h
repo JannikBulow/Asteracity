@@ -21,10 +21,10 @@ namespace backend {
             float width = height * (viewportSize.x / viewportSize.y);
 
             return {
-                -width * 0.5f,
-                width * 0.5f,
-                height * 0.5f,
-                -height * 0.5f
+                position.x - width * 0.5f,
+                position.x + width * 0.5f,
+                position.y + height * 0.5f,
+                position.y - height * 0.5f
             };
         }
 
@@ -33,7 +33,15 @@ namespace backend {
         }
 
         math::Mat4 projectionMatrix(math::Vec2 viewportSize) const {
-            return math::Mat4::Orthographic(worldBounds(viewportSize));
+            float height = worldHeight / zoom;
+            float width = height * (viewportSize.x / viewportSize.y);
+
+            return math::Mat4::Orthographic({
+                -width * 0.5f,
+                width * 0.5f,
+                height * 0.5f,
+                -height * 0.5f
+            });
         }
 
         math::Vec2 worldToScreen(math::Vec2 world, math::Vec2 viewportSize) const {
