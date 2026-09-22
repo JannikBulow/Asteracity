@@ -3,6 +3,7 @@
 #ifndef ASTERACITY_ENGINE_ASSET_ASSET_MANAGER_H
 #define ASTERACITY_ENGINE_ASSET_ASSET_MANAGER_H
 
+#include "engine/asset/animation.h"
 #include "engine/asset/sprite.h"
 
 #include "engine/resource/resource_manager.h"
@@ -15,6 +16,7 @@ namespace engine {
         explicit AssetManager(ResourceManager& resourceManager);
 
         Sprite loadSprite(const util::ResourceLocation& location);
+        AnimationClip loadAnimation(const util::ResourceLocation& location);
 
     private:
         ResourceManager& mResourceManager;
