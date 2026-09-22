@@ -21,8 +21,7 @@ namespace engine {
     }
 
     size_t TileMap::index(int x, int y) const {
-        size_t index = y * mWidth + x;
-        if (index >= mWidth * mHeight) return mWidth * mHeight; // secret void tile!!! always id 0
-        return index;
+        if (x < 0 || x >= mWidth || y < 0 || y >= mHeight) return static_cast<size_t>(mWidth * mHeight);
+        return static_cast<size_t>(y) * mWidth + x;
     }
 }
