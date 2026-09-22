@@ -9,6 +9,7 @@ FetchContent_Declare(vlex
 FetchContent_MakeAvailable(vlex)
 
 set(SOURCES
+    src/parser/animation_parser.cpp
     src/parser/common.cpp
     src/parser/sprite_parser.cpp
 
@@ -16,6 +17,7 @@ set(SOURCES
 )
 
 set(HEADERS
+    include/assetc/parser/animation_parser.h
     include/assetc/parser/common.h
     include/assetc/parser/sprite_parser.h
     include/assetc/parser/token_stream.h

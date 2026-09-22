@@ -1,0 +1,56 @@
+// Copyright 2026 Jannik Laugmand Bülow
+
+#include "assetc/parser/animation_parser.h"
+
+#include "assetc/parser/common.h"
+
+namespace assetc {
+    AnimationParser::AnimationParser(TokenStream& tokens)
+        : mTokens(tokens) {}
+
+    formats::Animation AnimationParser::parse() {
+        mProgress.header.type = formats::ANIMATION;
+
+        while (current().getTokenType() != TokenType::EndOfFile) {
+            parseCommand();
+        }
+
+        return std::move(mProgress);
+    }
+
+    void AnimationParser::parseCommand() {
+        switch (current().getTokenType()) {
+            case TokenType::AnimationKeyword:
+                parseAnimationCommand();
+                break;
+            case TokenType::VersionKeyword:
+                parseVersionCommand();
+                break;
+            case TokenType::FromKeyword:
+                parseFromCommand();
+                break;
+
+            default:
+                throw util::AssetcException("weird command " + std::string(current().getText()));
+        }
+    }
+
+    void AnimationParser::parseAnimationCommand() {
+        consume();
+        expectToken(TokenType::StringLiteral);
+        mProgress.header.name = consume().getText();
+    }
+
+    void AnimationParser::parseVersionCommand() {
+        consume();
+        mProgress.header.version = ParseIntegerExpression(mTokens);
+    }
+
+    void AnimationParser::parseFromCommand() {
+        consume();
+        mProgress.texture = ParseResource(mTokens);
+        mProgress.rows = ParseIntegerExpression(mTokens);
+        mProgress.columns = ParseIntegerExpression(mTokens);
+        mProgress.frameDuration = ParseFloatExpression(mTokens);
+    }
+}

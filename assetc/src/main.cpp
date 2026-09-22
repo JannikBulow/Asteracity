@@ -2,6 +2,7 @@
 
 #include "assetc/lexer/lexer.h"
 
+#include "assetc/parser/animation_parser.h"
 #include "assetc/parser/sprite_parser.h"
 
 #include <file_formats/common/asset_header.h>
@@ -22,6 +23,8 @@ formats::AssetType GetAssetType(std::string_view in) {
 
     if (fileType == "sprite") {
         return formats::SPRITE;
+    } else if (fileType == "animation") {
+        return formats::ANIMATION;
     }
 
     throw util::AssetcException("unknown format");
@@ -77,6 +80,13 @@ int main(int argc, char** argv) {
             assetc::SpriteParser parser(tokens);
             formats::Sprite sprite = parser.parse();
             writer.write(sprite);
+            break;
+        }
+
+        case formats::ANIMATION: {
+            assetc::AnimationParser parser(tokens);
+            formats::Animation animation = parser.parse();
+            writer.write(animation);
             break;
         }
     }

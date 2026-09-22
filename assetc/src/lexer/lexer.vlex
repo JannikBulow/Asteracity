@@ -15,6 +15,7 @@ tokens assetc {
 
     version
 
+    animation
     sprite
 
     resource
@@ -22,6 +23,8 @@ tokens assetc {
     rgba RGBAKeyword
     frgb FRGBKeyword
     frgba FRGBAKeyword
+
+    from
 
     size
     texture
