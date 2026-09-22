@@ -7,6 +7,41 @@
 #include <glad/gl.h>
 
 namespace backend {
+    using namespace std::string_literals;
+
+    OpenGLGraphicsDevice::OpenGLGraphicsDevice() {
+        if (!gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress))) {
+            throw util::GameException();
+        }
+
+        GLint count = 0;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+
+        mExtensions.reserve(count);
+
+        for (GLint i = 0; i < count; i++) {
+            const char* extension = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
+            mExtensions.emplace(extension);
+        }
+    }
+
+    std::optional<VideoMemoryInfo> OpenGLGraphicsDevice::getVideoMemoryInfo() {
+        if (mExtensions.contains("GL_NVX_gpu_memory_info")) {
+            GLint total;
+            GLint available;
+
+            glGetIntegerv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &total);
+            glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &available);
+
+            return VideoMemoryInfo{
+                .total = static_cast<size_t>(total) * 1024,
+                .available = static_cast<size_t>(available) * 1024,
+            };
+        }
+
+        return std::nullopt;
+    }
+
     void OpenGLGraphicsDevice::beginFrame() {
 
     }

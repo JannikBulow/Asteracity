@@ -5,9 +5,15 @@
 
 #include "engine/backend/graphics_device.h"
 
+#include <unordered_set>
+
 namespace backend {
     class OpenGLGraphicsDevice : public IGraphicsDevice {
     public:
+        OpenGLGraphicsDevice();
+
+        std::optional<VideoMemoryInfo> getVideoMemoryInfo() override;
+
         void beginFrame() override;
         void endFrame() override;
 
@@ -54,6 +60,8 @@ namespace backend {
         using uint = unsigned int;
 
         static constexpr size_t MAX_TEXTURE_SLOTS = 16;
+
+        std::unordered_set<std::string> mExtensions;
 
         util::HandleStorage<uint, BufferHandleTag> mBuffers;
         util::HandleStorage<uint, SamplerHandleTag> mSamplers;

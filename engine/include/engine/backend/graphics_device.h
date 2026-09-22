@@ -8,6 +8,7 @@
 #include "engine/util/handle.h"
 #include "engine/util/math.h"
 
+#include <optional>
 #include <span>
 
 namespace backend {
@@ -17,6 +18,11 @@ namespace backend {
     using TextureHandle = util::Handle<struct TextureHandleTag>;
     using UniformHandle = util::Handle<struct UniformHandleTag>;
     using VertexArrayHandle = util::Handle<struct VertexArrayHandleTag>;
+
+    struct VideoMemoryInfo {
+        size_t total;
+        size_t available;
+    };
 
     enum class PrimitiveType {
         Triangles,
@@ -70,6 +76,8 @@ namespace backend {
     class IGraphicsDevice {
     public:
         virtual ~IGraphicsDevice() = default;
+
+        virtual std::optional<VideoMemoryInfo> getVideoMemoryInfo() = 0;
 
         virtual void beginFrame() = 0;
         virtual void endFrame() = 0;
