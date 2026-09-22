@@ -29,6 +29,7 @@ namespace assetc {
         void parseAnimationCommand();
         void parseVersionCommand();
         void parseFromCommand();
+        void parseSizeCommand();
     };
 }
 

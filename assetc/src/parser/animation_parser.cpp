@@ -29,6 +29,9 @@ namespace assetc {
             case TokenType::FromKeyword:
                 parseFromCommand();
                 break;
+            case TokenType::SizeKeyword:
+                parseSizeCommand();
+                break;
 
             default:
                 throw util::AssetcException("weird command " + std::string(current().getText()));
@@ -48,9 +51,15 @@ namespace assetc {
 
     void AnimationParser::parseFromCommand() {
         consume();
+        mProgress.type = formats::Animation::Type::Generated;
         mProgress.texture = ParseResource(mTokens);
         mProgress.rows = ParseIntegerExpression(mTokens);
         mProgress.columns = ParseIntegerExpression(mTokens);
         mProgress.frameDuration = ParseFloatExpression(mTokens);
+    }
+
+    void AnimationParser::parseSizeCommand() {
+        consume(); // size
+        mProgress.frameSize = ParseFloatSize(mTokens);
     }
 }

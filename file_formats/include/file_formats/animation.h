@@ -8,6 +8,7 @@
 #include "file_formats/common/asset_header.h"
 #include "file_formats/common/color.h"
 #include "file_formats/common/resource.h"
+#include "file_formats/common/size.h"
 
 namespace formats {
     struct AnimationFrame {
@@ -47,6 +48,7 @@ namespace formats {
         Resource texture;
         int rows;
         int columns;
+        FloatSize frameSize;
         float frameDuration;
 
         template<BinaryOutput Out>
@@ -64,6 +66,7 @@ namespace formats {
                     writer.write(texture);
                     writer.writeI32(rows);
                     writer.writeI32(columns);
+                    writer.write(frameSize);
                     writer.writeFloat(frameDuration);
                     break;
             }
@@ -92,6 +95,7 @@ namespace formats {
                     Resource texture = reader.template read<Resource>();
                     int rows = reader.readI32();
                     int columns = reader.readI32();
+                    FloatSize frameSize = reader.template read<FloatSize>();
                     float frameDuration = reader.readFloat();
                     return {
                         .header = std::move(header),
@@ -99,6 +103,7 @@ namespace formats {
                         .texture = std::move(texture),
                         .rows = rows,
                         .columns = columns,
+                        .frameSize = frameSize,
                         .frameDuration = frameDuration
                     };
                 }
