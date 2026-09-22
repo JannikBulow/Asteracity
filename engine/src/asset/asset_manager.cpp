@@ -12,7 +12,7 @@ namespace engine {
         formats::BinaryReader<formats::FileInput> reader(fopen(location.cstr(), "rb"));
         formats::Sprite spriteData = reader.read<formats::Sprite>();
 
-        Texture texture = mResourceManager.createTexture(spriteData.texture);
+        Texture texture = mResourceManager.createTexture(spriteData.texture, SamplerDescriptor(backend::TextureFilter::Nearest, backend::TextureWrap::Clamp));
 
         return Sprite{
             texture,
