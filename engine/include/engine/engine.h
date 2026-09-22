@@ -16,6 +16,7 @@
 
 #include "engine/sound/audio_device.h"
 
+#include "engine/world/systems/animation_system.h"
 #include "engine/world/systems/camera_system.h"
 #include "engine/world/systems/lifetime_system.h"
 #include "engine/world/systems/render_systems.h"
@@ -105,6 +106,7 @@ namespace engine {
 
         std::tuple<
             LifetimeSystem,
+            AnimationSystem,
             TileRenderSystem,
             RenderSystem,
             CameraSystem

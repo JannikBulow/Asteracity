@@ -80,6 +80,7 @@ find_package(OpenGL REQUIRED)
 option(ASTERACITY_TARGET_MULTITHREADED "Enable/disable certain features such as atomics and internal mutexes to make the engine multithreading safe. Keep off for single threaded usages to improve performance" OFF)
 
 set(SOURCES
+    src/asset/animation.cpp
     src/asset/asset_manager.cpp
     src/asset/sprite.cpp
 
@@ -108,6 +109,7 @@ set(SOURCES
     src/util/resource_location.cpp
     src/util/unicode.cpp
 
+    src/world/systems/animation_system.cpp
     src/world/systems/camera_system.cpp
     src/world/systems/lifetime_system.cpp
     src/world/systems/render_systems.cpp
@@ -123,6 +125,7 @@ set(SOURCES
 )
 
 set(HEADERS
+    include/engine/asset/animation.h
     include/engine/asset/asset_manager.h
     include/engine/asset/sprite.h
 
@@ -171,11 +174,13 @@ set(HEADERS
     include/engine/util/timer.h
     include/engine/util/unicode.h
 
+    include/engine/world/components/animator.h
     include/engine/world/components/camera.h
     include/engine/world/components/lifetime.h
     include/engine/world/components/renderer.h
     include/engine/world/components/transform.h
 
+    include/engine/world/systems/animation_system.h
     include/engine/world/systems/camera_system.h
     include/engine/world/systems/lifetime_system.h
     include/engine/world/systems/render_systems.h
