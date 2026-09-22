@@ -12,6 +12,10 @@ namespace engine {
     public:
         Sprite(Texture texture, math::Vec2 size, std::optional<math::Rect> pixelBounds = std::nullopt, math::Color tint = math::Color::White);
 
+        bool operator==(const Sprite& other) const {
+            return mTexture == other.mTexture && mUV == other.mUV && mSize == other.mSize && mTint == other.mTint;
+        }
+
         const Texture& texture() const { return mTexture; }
         math::Rect uv() const { return mUV; }
         math::Vec2 size() const { return mSize; }
