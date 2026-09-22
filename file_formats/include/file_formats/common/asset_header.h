@@ -8,7 +8,8 @@
 
 namespace formats {
     enum AssetType : uint16_t {
-        SPRITE = 0
+        SPRITE = 0,
+        ANIMATION = 1,
     };
 
     struct AssetHeader {

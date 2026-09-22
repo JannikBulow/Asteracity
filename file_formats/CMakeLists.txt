@@ -15,6 +15,7 @@ set(HEADERS
     include/file_formats/common/resource.h
     include/file_formats/common/size.h
 
+    include/file_formats/animation.h
     include/file_formats/sprite.h
 )
 
