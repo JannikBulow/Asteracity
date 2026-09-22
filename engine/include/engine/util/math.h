@@ -28,6 +28,10 @@ namespace math {
         constexpr Color4B() = default;
         constexpr Color4B(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) : r(r), g(g), b(b), a(a) {}
 
+        bool operator==(const Color4B& other) const {
+            return r == other.r && g == other.g && b == other.b && a == other.a;
+        }
+
         constexpr int rgb() const {
             return (0xFF << 24) | (r << 16) | (g << 8) | b;
         }
@@ -58,8 +62,11 @@ namespace math {
         float r, g, b, a;
 
         constexpr Color4F() = default;
-        constexpr Color4F(float r, float g, float b) : r(r), g(g), b(b), a(1.0f) {}
-        constexpr Color4F(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
+        constexpr Color4F(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a) {}
+
+        bool operator==(const Color4F& other) const {
+            return r == other.r && g == other.g && b == other.b && a == other.a;
+        }
 
         explicit constexpr operator struct Color4B() const;
     };
@@ -139,6 +146,10 @@ namespace math {
         static constexpr Vec2T Left() { return {-1, 0}; };
         static constexpr Vec2T Right() { return {1, 0}; };
 
+        bool operator==(const Vec2T& other) const {
+            return x == other.x && y == other.y;
+        }
+
         Vec2T& operator+=(Vec2T other) {
             x += other.x;
             y += other.y;
@@ -212,6 +223,10 @@ namespace math {
 
         constexpr RectT() = default;
         constexpr RectT(T left, T right, T top, T bottom) : left(left), right(right), top(top), bottom(bottom) {}
+
+        bool operator==(const RectT& other) const {
+            return left == other.left && right == other.right && top == other.top && bottom == other.bottom;
+        }
 
         constexpr T width() const {
             return right - left;
