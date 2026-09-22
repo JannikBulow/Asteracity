@@ -1,19 +1,10 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#include <engine/backend/backend.h>
-
-#include <engine/backends/glfw/input_provider.h>
-#include <engine/backends/glfw/window.h>
-
-#include <engine/backends/miniaudio/audio_device.h>
-
-#include <engine/backends/opengl/renderer.h>
-#include <engine/backends/opengl/graphics_device.h>
-
-#include <engine/backends/stb/asset_provider.h>
+#include <engine/asset/animation.h>
 
 #include <engine/input/input_handler.h>
 
+#include <engine/world/components/animator.h>
 #include <engine/world/components/camera.h>
 #include <engine/world/components/renderer.h>
 #include <engine/world/components/transform.h>
@@ -78,15 +69,16 @@ int main(int argc, char** argv) {
     engine::Sprite black = engine.assetManager().loadSprite({"sprites/black.sprite"});
     engine::Sprite grass1 = engine.assetManager().loadSprite({"sprites/grass_1.sprite"});
 
+    engine::AnimationClip testAnimation = engine.assetManager().loadAnimation({"animations/test.animation"});
+
     engine.tileRegistry().registerTile(0, {std::move(black)});
     engine.tileRegistry().registerTile(1, {std::move(grass1)});
-    engine.tileRegistry().registerTile(2, {rat});
 
     auto scene = std::make_unique<engine::Scene>(engine.tileRegistry(), math::Vec2I{11, 11});
 
     for (int x = -5; x <= 5; x++) {
         for (int y = -5; y <= 5; y++) {
-            scene->tileWorld().get({x, y}).id = (x + y) % 2 == 0 ? 1 : 2;
+            scene->tileWorld().get({x, y}).id = 1;
         }
     }
 
@@ -97,7 +89,8 @@ int main(int argc, char** argv) {
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::CameraComponent>(playerEntity, engine.activeScene().getActiveCamera());
     world.addComponent<engine::Transform>(playerEntity);
-    world.addComponent<engine::SpriteRenderer>(playerEntity, rat);
+    world.addComponent<engine::SpriteAnimator>(playerEntity, engine::Animation(testAnimation));
+    world.addComponent<engine::SpriteRenderer>(playerEntity, testAnimation.getFrames().front().sprite);
     world.addComponent<MovementComponent>(playerEntity);
 
      return engine.main(argc, argv);
