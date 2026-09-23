@@ -25,6 +25,7 @@ tokens assetc {
     frgba FRGBAKeyword
 
     from
+    frame
 
     size
     texture

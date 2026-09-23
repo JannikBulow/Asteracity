@@ -10,6 +10,7 @@ namespace assetc {
 
     formats::Animation AnimationParser::parse() {
         mProgress.header.type = formats::ANIMATION;
+        mProgress.type = formats::Animation::Type::FrameByFrame;
 
         while (current().getTokenType() != TokenType::EndOfFile) {
             parseCommand();
@@ -26,6 +27,9 @@ namespace assetc {
             case TokenType::VersionKeyword:
                 parseVersionCommand();
                 break;
+            case TokenType::FrameKeyword:
+                parseFrameCommand();
+                break;§
             case TokenType::FromKeyword:
                 parseFromCommand();
                 break;
@@ -47,6 +51,13 @@ namespace assetc {
     void AnimationParser::parseVersionCommand() {
         consume();
         mProgress.header.version = ParseIntegerExpression(mTokens);
+    }
+
+    void AnimationParser::parseFrameCommand() {
+        consume();
+        formats::AnimationFrame frame;
+        frame.sprite = ParseResource(mTokens);
+        frame.duration = ParseFloatExpression(mTokens);
     }
 
     void AnimationParser::parseFromCommand() {
