@@ -15,6 +15,9 @@ namespace engine {
     public:
         explicit Renderer(backend::Backend& backend);
 
+        const Font* getDefaultFont() const { return mDefaultFont; }
+        void setDefaultFont(const Font& font) { mDefaultFont = &font; }
+
         void clear(math::Color color);
 
         void drawRect(math::Vec2 position, math::Vec2 size, math::Color color, float rotation = 0.0f);
@@ -23,11 +26,16 @@ namespace engine {
 
         void drawSprite(const Sprite& sprite, math::Vec2 position, float rotation = 0.0f);
 
+        void drawText(const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin = false);
+        void drawText(const std::string& text, math::Vec2 position, float fontSize, float spacing, float textLineSpacing, math::Color color, bool centerOrigin = false);
+
         void drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin = false);
         void drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, float spacing, float textLineSpacing, math::Color color, bool centerOrigin = false);
 
     private:
         backend::Backend& mBackend;
+
+        const Font* mDefaultFont;
     };
 }
 

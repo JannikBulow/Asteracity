@@ -35,6 +35,16 @@ namespace engine {
         drawTexture(sprite.texture(), position, sprite.size(), sprite.tint(), rotation, sprite.uv());
     }
 
+    void Renderer::drawText(const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin) {
+        if (!mDefaultFont) return;
+        drawText(*mDefaultFont, text, position, fontSize, color, centerOrigin);
+    }
+
+    void Renderer::drawText(const std::string& text, math::Vec2 position, float fontSize, float spacing, float textLineSpacing, math::Color color, bool centerOrigin) {
+        if (!mDefaultFont) return;
+        drawText(*mDefaultFont, text, position, fontSize, spacing, textLineSpacing, color, centerOrigin);
+    }
+
     void Renderer::drawText(const Font& font, const std::string& text, math::Vec2 position, float fontSize, math::Color color, bool centerOrigin) {
         float spacing = fontSize / 12;
         drawText(font, text, position, fontSize, spacing, 2.0f, color, centerOrigin);
