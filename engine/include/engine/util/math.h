@@ -228,12 +228,36 @@ namespace math {
             return left == other.left && right == other.right && top == other.top && bottom == other.bottom;
         }
 
+        Vec2T<T> topLeft() const {
+            return {left, top};
+        }
+
+        Vec2T<T> topRight() const {
+            return {right, top};
+        }
+
+        Vec2T<T> bottomLeft() const {
+            return {left, bottom};
+        }
+
+        Vec2T<T> bottomRight() const {
+            return {right, bottom};
+        }
+
+        Vec2T<T> center() const {
+            return Vec2T<T>(left + right, top + bottom) / T(2);
+        }
+
+        Vec2T<T> size() const {
+            return {width(), height()};
+        }
+
         constexpr T width() const {
             return right - left;
         }
 
         constexpr T height() const {
-            return bottom - top;
+            return top - bottom;
         }
     };
 
