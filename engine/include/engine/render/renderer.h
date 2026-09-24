@@ -15,12 +15,22 @@ namespace engine {
     public:
         explicit Renderer(backend::Backend& backend);
 
-        const Font* getDefaultFont() const { return mDefaultFont; }
-        void setDefaultFont(const Font& font) { mDefaultFont = &font; }
+        const Font* getDefaultFont() const { return mDefaultFont.has_value() ? &*mDefaultFont : nullptr; }
+        void setDefaultFont(Font font) { mDefaultFont = std::move(font); }
+
+        math::Vec2 measureText(const std::string& text, float fontSize);
+        math::Vec2 measureText(const std::string& text, float fontSize, float spacing, float textLineSpacing);
+
+        math::Vec2 measureText(const Font& font, const std::string& text, float fontSize);
+        math::Vec2 measureText(const Font& font, const std::string& text, float fontSize, float spacing, float textLineSpacing);
 
         void clear(math::Color color);
 
         void drawRect(math::Vec2 position, math::Vec2 size, math::Color color, float rotation = 0.0f);
+        void drawRect(math::Rect rect, math::Color color, float rotation = 0.0f);
+
+        void drawRectOutline(math::Vec2 position, math::Vec2 size, float thickness, math::Color color, float rotation = 0.0f);
+        void drawRectOutline(math::Rect rect, float thickness, math::Color color, float rotation = 0.0f);
 
         void drawTexture(const Texture& texture, math::Vec2 position, math::Vec2 size, math::Color color = math::Color::White, float rotation = 0.0f, math::Rect uv = {0, 1, 1, 0});
 
@@ -35,7 +45,7 @@ namespace engine {
     private:
         backend::Backend& mBackend;
 
-        const Font* mDefaultFont;
+        std::optional<Font> mDefaultFont;
     };
 }
 
