@@ -28,7 +28,7 @@ namespace math {
         constexpr Color4B() = default;
         constexpr Color4B(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) : r(r), g(g), b(b), a(a) {}
 
-        bool operator==(const Color4B& other) const {
+        constexpr bool operator==(const Color4B& other) const {
             return r == other.r && g == other.g && b == other.b && a == other.a;
         }
 
@@ -64,7 +64,7 @@ namespace math {
         constexpr Color4F() = default;
         constexpr Color4F(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a) {}
 
-        bool operator==(const Color4F& other) const {
+        constexpr bool operator==(const Color4F& other) const {
             return r == other.r && g == other.g && b == other.b && a == other.a;
         }
 
@@ -146,29 +146,29 @@ namespace math {
         static constexpr Vec2T Left() { return {-1, 0}; };
         static constexpr Vec2T Right() { return {1, 0}; };
 
-        bool operator==(const Vec2T& other) const {
+        constexpr bool operator==(const Vec2T& other) const {
             return x == other.x && y == other.y;
         }
 
-        Vec2T& operator+=(Vec2T other) {
+        constexpr Vec2T& operator+=(Vec2T other) {
             x += other.x;
             y += other.y;
             return *this;
         }
 
-        Vec2T& operator-=(Vec2T other) {
+        constexpr Vec2T& operator-=(Vec2T other) {
             x -= other.x;
             y -= other.y;
             return *this;
         }
 
-        Vec2T& operator*=(T scale) {
+        constexpr Vec2T& operator*=(T scale) {
             x *= scale;
             y *= scale;
             return *this;
         }
 
-        Vec2T& operator/=(T scale) {
+        constexpr Vec2T& operator/=(T scale) {
             x /= scale;
             y /= scale;
             return *this;
@@ -183,37 +183,37 @@ namespace math {
     using Vec2 = Vec2F;
 
     template<class T>
-    Vec2T<T> operator+(Vec2T<T> lhs, Vec2T<T> rhs) {
+    constexpr Vec2T<T> operator+(Vec2T<T> lhs, Vec2T<T> rhs) {
         lhs += rhs;
         return lhs;
     }
 
     template<class T>
-    Vec2T<T> operator-(Vec2T<T> lhs, Vec2T<T> rhs) {
+    constexpr Vec2T<T> operator-(Vec2T<T> lhs, Vec2T<T> rhs) {
         lhs -= rhs;
         return lhs;
     }
 
     template<class T>
-    Vec2T<T> operator*(Vec2T<T> vec, T scale) {
+    constexpr Vec2T<T> operator*(Vec2T<T> vec, T scale) {
         vec *= scale;
         return vec;
     }
 
     template<class T>
-    Vec2T<T> operator*(T scale, Vec2T<T> vec) {
+    constexpr Vec2T<T> operator*(T scale, Vec2T<T> vec) {
         vec *= scale;
         return vec;
     }
 
     template<class T>
-    Vec2T<T> operator/(Vec2T<T> vec, T scale) {
+    constexpr Vec2T<T> operator/(Vec2T<T> vec, T scale) {
         vec /= scale;
         return vec;
     }
 
     template<class T>
-    Vec2T<T> operator-(Vec2T<T> vec) {
+    constexpr Vec2T<T> operator-(Vec2T<T> vec) {
         return {-vec.x, -vec.y};
     }
 
@@ -224,31 +224,31 @@ namespace math {
         constexpr RectT() = default;
         constexpr RectT(T left, T right, T top, T bottom) : left(left), right(right), top(top), bottom(bottom) {}
 
-        bool operator==(const RectT& other) const {
+        constexpr bool operator==(const RectT& other) const {
             return left == other.left && right == other.right && top == other.top && bottom == other.bottom;
         }
 
-        Vec2T<T> topLeft() const {
+        constexpr Vec2T<T> topLeft() const {
             return {left, top};
         }
 
-        Vec2T<T> topRight() const {
+        constexpr Vec2T<T> topRight() const {
             return {right, top};
         }
 
-        Vec2T<T> bottomLeft() const {
+        constexpr Vec2T<T> bottomLeft() const {
             return {left, bottom};
         }
 
-        Vec2T<T> bottomRight() const {
+        constexpr Vec2T<T> bottomRight() const {
             return {right, bottom};
         }
 
-        Vec2T<T> center() const {
+        constexpr Vec2T<T> center() const {
             return Vec2T<T>(left + right, top + bottom) / T(2);
         }
 
-        Vec2T<T> size() const {
+        constexpr Vec2T<T> size() const {
             return {width(), height()};
         }
 
