@@ -45,11 +45,77 @@ namespace backend {
         GLFW_KEY_X,
         GLFW_KEY_Y,
         GLFW_KEY_Z,
+
+        GLFW_KEY_SPACE,
+        GLFW_KEY_ESCAPE,
+        GLFW_KEY_ENTER,
+        GLFW_KEY_TAB,
+        GLFW_KEY_BACKSPACE,
+
+        GLFW_KEY_F1,
+        GLFW_KEY_F2,
+        GLFW_KEY_F3,
+        GLFW_KEY_F4,
+        GLFW_KEY_F5,
+        GLFW_KEY_F6,
+        GLFW_KEY_F7,
+        GLFW_KEY_F8,
+        GLFW_KEY_F9,
+        GLFW_KEY_F10,
+        GLFW_KEY_F11,
+        GLFW_KEY_F12,
+        GLFW_KEY_F13,
+        GLFW_KEY_F14,
+        GLFW_KEY_F15,
+        GLFW_KEY_F16,
+        GLFW_KEY_F17,
+        GLFW_KEY_F18,
+        GLFW_KEY_F19,
+        GLFW_KEY_F20,
+        GLFW_KEY_F21,
+        GLFW_KEY_F22,
+        GLFW_KEY_F23,
+        GLFW_KEY_F24,
+        GLFW_KEY_F25,
     };
 
 
     GLFWInputProvider::GLFWInputProvider(GLFWWindow& window)
-        : mWindow(window.mWindow) {}
+        : mWindow(window.mWindow) {
+        glfwSetWindowUserPointer(mWindow, this);
+
+        glfwSetCharCallback(mWindow, [](GLFWwindow* window, unsigned int glfwCodepoint) {
+            unicode::codepoint codepoint = static_cast<unicode::codepoint>(glfwCodepoint);
+            GLFWInputProvider* input = static_cast<GLFWInputProvider*>(glfwGetWindowUserPointer(window));
+
+            input->mInputQueue.push(codepoint);
+        });
+
+        glfwSetScrollCallback(mWindow, [](GLFWwindow* wwindow, double x, double y) {
+            GLFWInputProvider* input = static_cast<GLFWInputProvider*>(glfwGetWindowUserPointer(wwindow));
+
+            input->mMouseScroll.x += x;
+            input->mMouseScroll.y += y;
+        });
+    }
+
+    void GLFWInputProvider::pollEvents() {
+        while (!mInputQueue.empty()) mInputQueue.pop(); // TODO: clear?
+        mMouseScroll = math::Vec2D::Zero();
+    }
+
+    std::optional<char> GLFWInputProvider::getCharPressed() {
+        std::optional<unicode::codepoint> codepoint = getUnicodePressed();
+        if (!codepoint) return std::nullopt;
+        return unicode::ToAscii(*codepoint);
+    }
+
+    std::optional<unicode::codepoint> GLFWInputProvider::getUnicodePressed() {
+        if (mInputQueue.empty()) return std::nullopt;
+        unicode::codepoint codepoint = mInputQueue.front();
+        mInputQueue.pop();
+        return codepoint;
+    }
 
     bool GLFWInputProvider::isKeyDown(Key key) {
         return glfwGetKey(mWindow, glfwKeyMap[static_cast<size_t>(key)]) == GLFW_PRESS;
@@ -71,5 +137,9 @@ namespace backend {
 
     bool GLFWInputProvider::isMouseButtonUp(int button) {
         return glfwGetMouseButton(mWindow, button) == GLFW_RELEASE; // glfw and this engine use the same mouse button numbers
+    }
+
+    math::Vec2 GLFWInputProvider::getMouseScroll() {
+        return math::Vec2(mMouseScroll);
     }
 }

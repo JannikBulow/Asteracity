@@ -7,10 +7,17 @@
 
 #include "engine/backends/glfw/window.h"
 
+#include <queue>
+
 namespace backend {
     class GLFWInputProvider : public IInputProvider {
     public:
         explicit GLFWInputProvider(GLFWWindow& window);
+
+        void pollEvents() override;
+
+        std::optional<char> getCharPressed() override;
+        std::optional<unicode::codepoint> getUnicodePressed() override;
 
         bool isKeyDown(Key key) override;
         bool isKeyUp(Key key) override;
@@ -19,8 +26,14 @@ namespace backend {
         bool isMouseButtonDown(int button) override;
         bool isMouseButtonUp(int button) override;
 
+        math::Vec2 getMouseScroll() override;
+
     private:
         GLFWwindow* mWindow; // unowned!!!
+
+        std::queue<unicode::codepoint> mInputQueue;
+
+        math::Vec2D mMouseScroll = math::Vec2D::Zero();
     };
 }
 
