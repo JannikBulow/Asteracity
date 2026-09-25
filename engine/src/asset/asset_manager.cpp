@@ -9,6 +9,16 @@ namespace engine {
     AssetManager::AssetManager(ResourceManager& resourceManager)
         : mResourceManager(resourceManager) {}
 
+    Sprite AssetManager::generateSprite(math::Vec2 spriteSize, int imageWidth, int imageHeight, ImageFormat format, PixelGenerator generator) {
+        Texture texture = mResourceManager.generateTexture(imageWidth, imageHeight, format, std::move(generator), SamplerDescriptor(backend::TextureFilter::Nearest, backend::TextureWrap::Clamp));
+        return Sprite{
+            std::move(texture),
+            spriteSize,
+            std::nullopt,
+            math::Color::White
+        };
+    }
+
     Sprite AssetManager::loadSprite(const util::ResourceLocation& location) {
         formats::BinaryReader<formats::FileInput> reader(fopen(location.cstr(), "rb"));
         formats::Sprite spriteData = reader.read<formats::Sprite>();
@@ -16,7 +26,7 @@ namespace engine {
         Texture texture = mResourceManager.createTexture(spriteData.texture, SamplerDescriptor(backend::TextureFilter::Nearest, backend::TextureWrap::Clamp));
 
         return Sprite{
-            texture,
+            std::move(texture),
             {spriteData.size.width, spriteData.size.height},
             spriteData.uv.has_value() ? std::optional(math::Rect(spriteData.uv->left, spriteData.uv->right, spriteData.uv->top, spriteData.uv->bottom)) : std::nullopt,
             {spriteData.tint.r, spriteData.tint.g, spriteData.tint.b, spriteData.tint.a},

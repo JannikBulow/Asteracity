@@ -15,6 +15,8 @@ namespace engine {
     public:
         explicit AssetManager(ResourceManager& resourceManager);
 
+        Sprite generateSprite(math::Vec2 spriteSize, int imageWidth, int imageHeight, ImageFormat format, PixelGenerator generator);
+
         Sprite loadSprite(const util::ResourceLocation& location);
         AnimationClip loadAnimation(const util::ResourceLocation& location);
 
