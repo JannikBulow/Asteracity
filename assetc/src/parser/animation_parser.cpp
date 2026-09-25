@@ -29,7 +29,7 @@ namespace assetc {
                 break;
             case TokenType::FrameKeyword:
                 parseFrameCommand();
-                break;§
+                break;
             case TokenType::FromKeyword:
                 parseFromCommand();
                 break;
