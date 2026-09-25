@@ -40,7 +40,7 @@ namespace backend {
         ImageFormat format;
         uint8_t* pixels;
 
-        size_t getSizeBytes() const {
+        int getBytesPerPixel() const {
             int bytesPerPixel = 4;
             switch (format) {
                 case ImageFormat::R8:
@@ -53,7 +53,11 @@ namespace backend {
                     bytesPerPixel = 4;
                     break;
             }
-            return width * height * bytesPerPixel;
+            return bytesPerPixel;
+        }
+
+        size_t getSizeBytes() const {
+            return width * height * getBytesPerPixel();
         }
     };
 
