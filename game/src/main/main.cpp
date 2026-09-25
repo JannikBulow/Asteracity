@@ -55,6 +55,8 @@ int main(int argc, char** argv) {
         .audioBackend = engine::AudioBackend::Miniaudio
     });
 
+    engine.renderer().setDefaultFont(engine.resourceManager().createFont({"fonts/default.ttf"}, 18));
+
     engine.frameController().timer().setLimit(165);
 
     engine::InputHandler<Action> input(engine.backend(), engine.console());
