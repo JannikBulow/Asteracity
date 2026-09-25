@@ -13,6 +13,11 @@ namespace util {
         explicit GameException(const std::string& message) : runtime_error(message) {}
     };
 
+    class WIPException : public GameException {
+    public:
+        WIPException() : GameException("Work in progress feature was used") {}
+    };
+
     class AbstractShaderException : public GameException {
     public:
         AbstractShaderException(std::string_view rendererID, std::string_view stage, std::string_view log)
