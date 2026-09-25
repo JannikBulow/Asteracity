@@ -113,6 +113,17 @@ namespace engine {
         > mBuiltinSystems;
         std::vector<std::unique_ptr<ISystem>> mSystems; // any non-builtin systems
 
+        template<class T>
+        T makeSystem() {
+            if constexpr (std::constructible_from<T, Engine&>) return T(*this);
+            else return T();
+        }
+
+        template<class... Ts>
+        std::tuple<Ts...> makeSystems(std::type_identity<std::tuple<Ts...>>) {
+            return {makeSystem<Ts>()...};
+        }
+
         void call(CallbackID id, float dt);
 
         void preUpdate(float dt);

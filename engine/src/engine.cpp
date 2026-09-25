@@ -10,7 +10,9 @@ namespace engine {
         , mResourceManager(mBackend)
         , mAssetManager(mResourceManager)
         , mRenderer(mBackend)
-        , mAudioDevice(mBackend) {}
+        , mAudioDevice(mBackend)
+        , mBuiltinSystems(makeSystems(std::type_identity<decltype(mBuiltinSystems)>())) {
+    }
 
     Engine::Engine(const backend::Backend& backend)
         : mBackend(backend)
@@ -18,7 +20,9 @@ namespace engine {
         , mResourceManager(mBackend)
         , mAssetManager(mResourceManager)
         , mRenderer(mBackend)
-        , mAudioDevice(mBackend) {}
+        , mAudioDevice(mBackend)
+        , mBuiltinSystems(makeSystems(std::type_identity<decltype(mBuiltinSystems)>())) {
+    }
 
     void Engine::pushScene(std::unique_ptr<Scene> scene) {
         mSceneStack.push_back(std::move(scene));
