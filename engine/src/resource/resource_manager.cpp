@@ -49,6 +49,23 @@ namespace engine {
         return Sound(&it2->second);
     }
 
+    Texture ResourceManager::generateTexture(int width, int height, ImageFormat format, PixelGenerator generator, std::optional<SamplerDescriptor> sampler) {
+        ImageGenerator imageGenerator(width, height, format, std::move(generator));
+        util::ResourceLocation location("<ResourceManager>", std::format("generator/images/{}", mImageGenerators.size()));
+        TextureKey key(std::move(location), std::move(sampler));
+
+        if (mTextures.contains(key)) throw util::GameException();
+
+        auto [it, success] = mTextures.emplace(std::move(key), this);
+        if (!success) throw util::GameException();
+
+        if (it->first.samplerDesc) it->second.samplerDesc = &*it->first.samplerDesc;
+
+        mImageGenerators.emplace(&it->second, std::move(imageGenerator));
+
+        return Texture(&it->second);
+    }
+
     Texture ResourceManager::createTexture(util::ResourceLocation location, std::optional<SamplerDescriptor> sampler) {
         TextureKey key(std::move(location), std::move(sampler));
         auto it = mTextures.find(key);
@@ -91,6 +108,43 @@ namespace engine {
         } else {
             tail = node->prev;
         }
+    }
+
+    backend::Image ResourceManager::ImageGenerator::generate() {
+        //TODO: make this nicer with the asset provider
+        backend::Image image;
+        image.width = width;
+        image.height = height;
+        image.format = format;
+        image.pixels = new uint8_t[image.getSizeBytes()];
+
+        int bytesPerPixel = image.getBytesPerPixel();
+        uint8_t* pixel = image.pixels;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                math::Color color = pixelGenerator(x, y);
+                switch (format) {
+                    case ImageFormat::R8:
+                        pixel[0] = color.r;
+                        break;
+                    case ImageFormat::RGB8:
+                        pixel[0] = color.r;
+                        pixel[1] = color.g;
+                        pixel[2] = color.b;
+                        break;
+                    case ImageFormat::RGBA8:
+                        pixel[0] = color.r;
+                        pixel[1] = color.g;
+                        pixel[2] = color.b;
+                        pixel[3] = color.a;
+                        break;
+                }
+                pixel += bytesPerPixel;
+            }
+        }
+
+        return image;
     }
 
     bool ResourceManager::reclaimStep() {
@@ -304,7 +358,14 @@ namespace engine {
     }
 
     void ResourceManager::realizeTextureCPU(TextureResource& resource) {
-        resource.image = mBackend.assetProvider.loadImage(resource.location->cstr());
+        if (resource.location) {
+            resource.image = mBackend.assetProvider.loadImage(resource.location->cstr());
+        } else {
+            auto it = mImageGenerators.find(&resource);
+            if (it == mImageGenerators.end()) throw util::GameException();
+
+            resource.image = it->second.generate();
+        }
         mCPUMemoryProfile.used += resource.image->getSizeBytes();
     }
 

@@ -12,9 +12,13 @@
 #include "engine/util/object_allocator.h"
 
 #include <chrono>
+#include <functional>
 #include <unordered_map>
 
 namespace engine {
+    using ImageFormat = backend::ImageFormat;
+    using PixelGenerator = std::function<math::Color(int x, int y)>;
+
     // resources are things of data with proper lifetime management due to them being potentially slow to load
     class ResourceManager {
         friend struct FontResource;
@@ -43,6 +47,7 @@ namespace engine {
 
         Font createFont(util::ResourceLocation location, int fontSize, const unicode::codepoint* codepoints = nullptr, int codePointCount = 0, std::optional<SamplerDescriptor> sampler = std::nullopt);
         Sound createSound(util::ResourceLocation location);
+        Texture generateTexture(int width, int height, ImageFormat format, PixelGenerator generator, std::optional<SamplerDescriptor> sampler = std::nullopt);
         Texture createTexture(util::ResourceLocation location, std::optional<SamplerDescriptor> sampler = std::nullopt);
 
         //TODO: remake the automatic eviction system to also allow evicting currently referenced resources if pressure is severe
@@ -65,6 +70,15 @@ namespace engine {
 
             void insert(ReclaimNode* node);
             void remove(ReclaimNode* node);
+        };
+
+        struct ImageGenerator {
+            int width;
+            int height;
+            ImageFormat format;
+            PixelGenerator pixelGenerator;
+
+            backend::Image generate();
         };
 
         struct TextureKey {
@@ -131,6 +145,7 @@ namespace engine {
         std::unordered_map<FontKey, FontResource, FontKey::Hash> mFonts;
         std::unordered_map<util::ResourceLocation, SoundResource> mSounds;
         std::unordered_map<TextureKey, TextureResource, TextureKey::Hash> mTextures;
+        std::unordered_map<TextureResource*, ImageGenerator> mImageGenerators;
 
         bool reclaimStep();
 
