@@ -22,6 +22,7 @@ namespace engine {
         template<class F0, class F1, class F2, class F3>
         void execute(const Camera& camera, F0&& preFrame, F1&& frameBegin, F2&& world, F3&& ui) {
             float dt = timer().tick();
+            mBackend.inputProvider.pollEvents();
             mBackend.window.pollEvents();
             preFrame(dt);
             beginFrame();
