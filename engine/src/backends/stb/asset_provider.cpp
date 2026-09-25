@@ -120,7 +120,7 @@ namespace backend {
 
         if (!codepoints || codepointCount == 0) {
             codepoints = defaultCodepoints;
-            codepointCount = sizeof(defaultCodepoints) / sizeof(defaultCodepoints[0]);
+            codepointCount = std::size(defaultCodepoints);
         }
 
         FILE* file = fopen(path, "rb");
