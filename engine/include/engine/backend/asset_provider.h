@@ -150,37 +150,32 @@ namespace backend {
 
             float textWidth = 0.0f;
             float tempTextWidth = 0.0f;
-
-            int tempGlyphCounter = 0;
-            int glyphCounter = 0;
-
             float textHeight = fontSize;
+
             float scale = fontSize / static_cast<float>(baseSize);
 
             for (unicode::codepoint codepoint : codepoints) {
                 const Glyph& glyph = glyphs[getGlyphIndex(codepoint)];
 
-                if (codepoint != '\n') {
-                    glyphCounter++;
-
-                    if (glyph.advanceX > 0) textWidth += glyph.advanceX;
-                    else textWidth += glyph.atlasBounds.width() + glyph.offsetX;
-                } else {
-                    if (textWidth > tempTextWidth) tempTextWidth = textWidth;
+                if (codepoint == '\n') {
+                    if (textWidth > tempTextWidth)
+                        tempTextWidth = textWidth;
 
                     textWidth = 0.0f;
-                    glyphCounter = 0;
-
                     textHeight += fontSize + textLineSpacing;
+                    continue;
                 }
 
-                if (glyphCounter > tempGlyphCounter) tempGlyphCounter = glyphCounter;
+                if (glyph.advanceX == 0) textWidth += glyph.atlasBounds.width() * scale;
+                else textWidth += glyph.advanceX * scale;
+
+                textWidth += spacing;
             }
 
             if (textWidth > tempTextWidth) tempTextWidth = textWidth;
 
             return {
-                tempTextWidth * scale + static_cast<float>(tempGlyphCounter - 1) * spacing,
+                tempTextWidth,
                 textHeight
             };
         }
