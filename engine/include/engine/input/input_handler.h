@@ -3,6 +3,8 @@
 #ifndef ASTERACITY_ENGINE_INPUT_INPUT_HANDLER_H
 #define ASTERACITY_ENGINE_INPUT_INPUT_HANDLER_H
 
+#include "engine/developer/console.h"
+
 #include "engine/backend/backend.h"
 
 #include <array>
@@ -16,11 +18,12 @@ namespace engine {
 
     using Key = backend::Key;
 
-    template<InputAction Action>
+    template<InputAction Action, bool KeepAliveInConsole = false>
     class InputHandler {
     public:
-        explicit InputHandler(backend::Backend& backend)
-            : mProvider(backend.inputProvider) {}
+        InputHandler(backend::Backend& backend, const Console& console)
+            : mProvider(backend.inputProvider)
+            , mConsole(console) {}
 
         void setKeybind(Action action, Key key) {
             auto& input = mInputMap[static_cast<size_t>(action)];
@@ -55,11 +58,17 @@ namespace engine {
         }
 
         void update() {
+            const bool consoleBlocksInput = mConsole.isVisible() && !KeepAliveInConsole;
+
             for (auto& input : mInputMap) {
                 if (!input.exists) continue;
 
                 input.downLastFrame = input.downThisFrame;
                 input.downThisFrame = false;
+
+                if (consoleBlocksInput) {
+                    continue;
+                }
 
                 switch (input.type) {
                     case InputType::Keyboard:
@@ -87,6 +96,7 @@ namespace engine {
         };
 
         backend::IInputProvider& mProvider;
+        const Console& mConsole;
 
         std::array<Input, static_cast<size_t>(Action::Count)> mInputMap{};
     };

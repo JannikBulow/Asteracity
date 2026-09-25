@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
     engine.frameController().timer().setLimit(165);
 
-    engine::InputHandler<Action> input(engine.backend());
+    engine::InputHandler<Action> input(engine.backend(), engine.console());
     input.setKeybind(Action::Up, engine::Key::W);
     input.setKeybind(Action::Down, engine::Key::S);
     input.setKeybind(Action::Left, engine::Key::A);
