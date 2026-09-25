@@ -107,40 +107,40 @@ namespace backend {
             float tempTextWidth = 0.0f;
             float textHeight = fontSize;
 
+            //TODO: introduce world space measurement when the time is right. maybe move this to IRenderer
             float scale = fontSize / static_cast<float>(baseSize);
 
             unicode::codepoint codepoint = 0;
             int index = 0;
 
             for (size_t i = 0; i < textLength;) {
-                byteCounter++;
-
                 int codepointSize = 0;
-                codepoint = unicode::GetNextCodepoint(text + i, &codepointSize);
-                index = getGlyphIndex(codepoint);
+                unicode::codepoint codepoint =
+                    unicode::GetNextCodepoint(text + i, &codepointSize);
 
-                const Glyph& glyph = glyphs[index];
+                const Glyph& glyph = glyphs[getGlyphIndex(codepoint)];
 
                 i += codepointSize;
 
-                if (codepoint != '\n') {
-                    if (glyph.advanceX > 0) textWidth += glyph.advanceX;
-                    else textWidth += glyph.atlasBounds.width() + glyph.offsetX;
-                } else {
-                    if (textWidth > tempTextWidth) tempTextWidth = textWidth;
-                    byteCounter = 0;
-                    textWidth = 0.0f;
+                if (codepoint == '\n') {
+                    if (textWidth > tempTextWidth)
+                        tempTextWidth = textWidth;
 
+                    textWidth = 0.0f;
                     textHeight += fontSize + textLineSpacing;
+                    continue;
                 }
 
-                if (byteCounter > tempByteCounter) tempByteCounter = byteCounter;
+                if (glyph.advanceX == 0) textWidth += glyph.atlasBounds.width() * scale;
+                else textWidth += glyph.advanceX * scale;
+
+                textWidth += spacing;
             }
 
             if (textWidth > tempTextWidth) tempTextWidth = textWidth;
 
             return {
-                tempTextWidth * scale + static_cast<float>(tempByteCounter - 1) * scale,
+                tempTextWidth,
                 textHeight
             };
         }
