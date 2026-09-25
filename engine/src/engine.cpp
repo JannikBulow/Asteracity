@@ -12,6 +12,7 @@ namespace engine {
         , mRenderer(mBackend)
         , mAudioDevice(mBackend)
         , mBuiltinSystems(makeSystems(std::type_identity<decltype(mBuiltinSystems)>())) {
+        addEngineCommands();
     }
 
     Engine::Engine(const backend::Backend& backend)
@@ -22,6 +23,7 @@ namespace engine {
         , mRenderer(mBackend)
         , mAudioDevice(mBackend)
         , mBuiltinSystems(makeSystems(std::type_identity<decltype(mBuiltinSystems)>())) {
+        addEngineCommands();
     }
 
     void Engine::pushScene(std::unique_ptr<Scene> scene) {
@@ -91,6 +93,18 @@ namespace engine {
         }
 
         return 0;
+    }
+
+    void Engine::addEngineCommands() {
+        mConsole.registerCommand("echo", "echo [message...]", [](Engine& engine, std::span<const std::string_view> args) {
+            std::string merged;
+            merged.reserve(args.size() * 4); // conservative estimation
+            for (const auto& arg : args) {
+                merged += arg;
+            }
+
+            engine.console().print(std::move(merged));
+        });
     }
 
     void Engine::call(CallbackID id, float dt) {

@@ -18,6 +18,7 @@
 
 #include "engine/world/systems/animation_system.h"
 #include "engine/world/systems/camera_system.h"
+#include "engine/world/systems/console_system.h"
 #include "engine/world/systems/lifetime_system.h"
 #include "engine/world/systems/render_systems.h"
 
@@ -68,6 +69,9 @@ namespace engine {
         const AudioDevice& audioDevice() const { return mAudioDevice; }
         const TileRegistry& tileRegistry() const { return mTileRegistry; }
 
+        Console& console() { return mConsole; }
+        const Console& console() const { return mConsole; }
+
         Scene& activeScene() { return *mSceneStack.back(); }
         const Scene& activeScene() const { return *mSceneStack.back(); }
 
@@ -100,6 +104,8 @@ namespace engine {
         AudioDevice mAudioDevice;
         TileRegistry mTileRegistry;
 
+        Console mConsole;
+
         std::array<std::function<void(Engine&, float)>, _count> mCallbacks{};
 
         std::vector<std::unique_ptr<Scene>> mSceneStack;
@@ -109,7 +115,8 @@ namespace engine {
             AnimationSystem,
             TileRenderSystem,
             RenderSystem,
-            CameraSystem
+            CameraSystem,
+            ConsoleSystem
         > mBuiltinSystems;
         std::vector<std::unique_ptr<ISystem>> mSystems; // any non-builtin systems
 
@@ -123,6 +130,8 @@ namespace engine {
         std::tuple<Ts...> makeSystems(std::type_identity<std::tuple<Ts...>>) {
             return {makeSystem<Ts>()...};
         }
+
+        void addEngineCommands();
 
         void call(CallbackID id, float dt);
 

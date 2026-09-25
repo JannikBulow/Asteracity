@@ -35,6 +35,11 @@ namespace util {
         ShaderLinkException(std::string_view rendererID, std::string_view log)
             : AbstractShaderException(rendererID, "shader linking", log) {}
     };
+
+    class CommandException : public GameException {
+    public:
+        using GameException::GameException;
+    };
 }
 
 #endif //ASTERACITY_ENGINE_UTIL_EXCEPTIONS_H

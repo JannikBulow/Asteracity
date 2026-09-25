@@ -94,6 +94,8 @@ set(SOURCES
 
     src/backends/stb/asset_provider.cpp
 
+    src/developer/console.cpp
+
     src/render/frame_controller.cpp
     src/render/renderer.cpp
 
@@ -111,6 +113,7 @@ set(SOURCES
 
     src/world/systems/animation_system.cpp
     src/world/systems/camera_system.cpp
+    src/world/systems/console_system.cpp
     src/world/systems/lifetime_system.cpp
     src/world/systems/render_systems.cpp
 
@@ -148,6 +151,8 @@ set(HEADERS
 
     include/engine/backends/stb/asset_provider.h
 
+    include/engine/developer/console.h
+
     include/engine/input/input_handler.h
 
     include/engine/render/camera.h
@@ -182,6 +187,7 @@ set(HEADERS
 
     include/engine/world/systems/animation_system.h
     include/engine/world/systems/camera_system.h
+    include/engine/world/systems/console_system.h
     include/engine/world/systems/lifetime_system.h
     include/engine/world/systems/render_systems.h
 
