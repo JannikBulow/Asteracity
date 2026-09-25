@@ -173,6 +173,16 @@ namespace math {
             y /= scale;
             return *this;
         }
+
+        constexpr Vec2T rotate(float angle) {
+            float c = std::cos(angle);
+            float s = std::sin(angle);
+
+            return {
+                x * c - y * s,
+                x * s + y * c
+            };
+        }
     };
 
     using Vec2I = Vec2T<int>;
