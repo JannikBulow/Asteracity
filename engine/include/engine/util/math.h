@@ -234,6 +234,11 @@ namespace math {
         constexpr RectT() = default;
         constexpr RectT(T left, T right, T top, T bottom) : left(left), right(right), top(top), bottom(bottom) {}
 
+        template<class U>
+        explicit constexpr operator RectT<U>() const {
+            return {U(left), U(right), U(top), U(bottom)};
+        }
+
         constexpr bool operator==(const RectT& other) const {
             return left == other.left && right == other.right && top == other.top && bottom == other.bottom;
         }
