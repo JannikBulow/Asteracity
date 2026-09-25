@@ -19,4 +19,10 @@ namespace engine {
             mUV = {0, 1, 1, 0};
         }
     }
+
+    Sprite Sprite::cloneTint(math::Color newTint) const {
+        Sprite clone(mTexture, mSize, std::nullopt, newTint);
+        clone.mUV = mUV; // can't be set correctly in ctor
+        return clone;
+    }
 }

@@ -21,6 +21,8 @@ namespace engine {
         math::Vec2 size() const { return mSize; }
         math::Color tint() const { return mTint; }
 
+        Sprite cloneTint(math::Color newTint) const;
+
     private:
         Texture mTexture;
         math::Rect mUV;
