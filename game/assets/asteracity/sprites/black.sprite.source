@@ -1,7 +1,0 @@
-version 1
-
-sprite "black"
-
-texture resource("images/black.png")
-
-size 1 1

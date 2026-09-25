@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     engine.addSystem(std::make_unique<MovementSystem>(input));
 
     engine::Sprite rat = engine.assetManager().loadSprite({"sprites/rat.sprite"});
-    engine::Sprite black = engine.assetManager().loadSprite({"sprites/black.sprite"});
+    engine::Sprite black = engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::Black; });
     engine::Sprite grass1 = engine.assetManager().loadSprite({"sprites/grass_1.sprite"});
 
     engine::AnimationClip testAnimation = engine.assetManager().loadAnimation({"animations/test.animation"});
