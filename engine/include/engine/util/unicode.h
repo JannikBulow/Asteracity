@@ -5,9 +5,12 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
+#include <string>
 
 namespace unicode {
     using codepoint = uint32_t;
+    using string = std::basic_string<codepoint>;
 
     codepoint GetNextCodepoint(const char* text, int* codepointSize);
 
