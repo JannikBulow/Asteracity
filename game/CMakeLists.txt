@@ -19,7 +19,7 @@ target_include_directories(asteracity
 
 target_compile_features(asteracity PUBLIC cxx_std_20)
 
-target_link_libraries(asteracity PRIVATE Asteracity::Engine)
+target_link_libraries(asteracity PRIVATE Asteracity::Engine Asteracity::Addon::Input)
 
 assetc_compile(asteracity
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets"
