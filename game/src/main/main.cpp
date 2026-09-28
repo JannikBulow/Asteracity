@@ -1,8 +1,8 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#include <engine/asset/animation.h>
+#include <engine/addons/input/systems.h>
 
-#include <engine/input/input_handler.h>
+#include <engine/asset/animation.h>
 
 #include <engine/world/components/animator.h>
 #include <engine/world/components/camera.h>
@@ -13,35 +13,12 @@
 
 #include <ranges>
 
-enum class Action {
-    Up = 0,
-    Down,
-    Left,
-    Right,
+struct Actions {
+    struct Move {
+        using value_type = math::Vec2;
+    };
 
-    Count
-};
-
-struct MovementComponent {};
-
-class MovementSystem : public engine::ISystem {
-public:
-    explicit MovementSystem(engine::InputHandler<Action>& inputHandler)
-        : mInputHandler(inputHandler) {}
-
-    void update(engine::Engine& engine, float dt) override {
-        mInputHandler.update();
-
-        for (auto [entity, transform, movement] : engine.activeScene().world().viewEntities<engine::Transform, MovementComponent>()) {
-            if (mInputHandler.isDown(Action::Up)) transform.position.y += 10.0f * dt;
-            if (mInputHandler.isDown(Action::Down)) transform.position.y -= 10.0f * dt;
-            if (mInputHandler.isDown(Action::Left)) transform.position.x -= 10.0f * dt;
-            if (mInputHandler.isDown(Action::Right)) transform.position.x += 10.0f * dt;
-        }
-    }
-
-private:
-    engine::InputHandler<Action>& mInputHandler;
+    using types = std::tuple<Move>;
 };
 
 int main(int argc, char** argv) {
@@ -59,13 +36,18 @@ int main(int argc, char** argv) {
 
     engine.frameController().timer().setLimit(165);
 
-    engine::InputHandler<Action> input(engine.backend(), engine.console());
-    input.setKeybind(Action::Up, engine::Key::W);
-    input.setKeybind(Action::Down, engine::Key::S);
-    input.setKeybind(Action::Left, engine::Key::A);
-    input.setKeybind(Action::Right, engine::Key::D);
+    auto inputSystemPtr = std::make_unique<engine::input::InputSystem<Actions>>(engine.inputProvider());
+    auto* inputSystem = inputSystemPtr.get();
+    engine.addSystem(std::move(inputSystemPtr));
 
-    engine.addSystem(std::make_unique<MovementSystem>(input));
+    inputSystem->bind<Actions::Move>({[](backend::IInputProvider& inputProvider) -> math::Vec2 {
+        math::Vec2 result;
+        if (inputProvider.isKeyDown(backend::Key::W)) result.y += 1.0f;
+        if (inputProvider.isKeyDown(backend::Key::S)) result.y -= 1.0f;
+        if (inputProvider.isKeyDown(backend::Key::A)) result.x -= 1.0f;
+        if (inputProvider.isKeyDown(backend::Key::D)) result.x += 1.0f;
+        return result;
+    }});
 
     engine::Sprite rat = engine.assetManager().loadSprite({"sprites/rat.sprite"});
     engine::Sprite black = engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::Black; });
@@ -90,10 +72,13 @@ int main(int argc, char** argv) {
 
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::CameraComponent>(playerEntity, engine.activeScene().getActiveCamera());
-    world.addComponent<engine::Transform>(playerEntity);
+    engine::Transform& transform = world.addComponent<engine::Transform>(playerEntity);
     world.addComponent<engine::SpriteAnimator>(playerEntity, engine::Animation(testAnimation));
     world.addComponent<engine::SpriteRenderer>(playerEntity, testAnimation.getFrames().front().sprite);
-    world.addComponent<MovementComponent>(playerEntity);
+
+    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [inputSystem, &transform](engine::Engine& engine, float dt) {
+        transform.position += inputSystem->value<Actions::Move>() * (dt * 5.0f);
+    });
 
      return engine.main(argc, argv);
 }

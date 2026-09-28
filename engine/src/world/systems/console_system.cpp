@@ -5,17 +5,12 @@
 #include "engine/engine.h"
 
 namespace engine {
-    ConsoleSystem::ConsoleSystem(Engine& engine)
-        : mInputHandler(engine.backend(), engine.console()) {
-        mInputHandler.setKeybind(Action::Backspace, Key::Backspace);
-        mInputHandler.setKeybind(Action::Enter, Key::Enter);
-        mInputHandler.setKeybind(Action::ToggleConsole, Key::F1);
-    }
-
     void ConsoleSystem::update(Engine& engine, float dt) {
-        mInputHandler.update();
+        mEnter.update(engine, backend::Key::Enter);
+        mBackspace.update(engine, backend::Key::Backspace);
+        mF1.update(engine, backend::Key::F1);
 
-        if (mInputHandler.isPressed(Action::ToggleConsole)) {
+        if (mF1.isPressed()) {
             engine.console().setVisible(!engine.console().isVisible());
         }
 
@@ -88,6 +83,15 @@ namespace engine {
         engine.renderer().drawRect({cursorX + cursorWidth * 0.5f, cursorY + cursorHeight * 0.5f}, {cursorWidth, cursorHeight}, math::Color::White);
     }
 
+    bool ConsoleSystem::KeyState::isPressed() const {
+        return !previous && current;
+    }
+
+    void ConsoleSystem::KeyState::update(Engine& engine, backend::Key key) {
+        previous = current;
+        current = engine.inputProvider().isKeyDown(key);
+    }
+
     void ConsoleSystem::handleInput(Engine& engine) {
         while (std::optional<char> c = engine.inputProvider().getCharPressed()) {
             mPendingInput.push_back(*c); //TODO: handle cursor
@@ -95,12 +99,12 @@ namespace engine {
         }
 
         //TODO: add that thing where you can hold backspace and it'll delete faster
-        if (mInputHandler.isPressed(Action::Backspace) && !mPendingInput.empty()) {
+        if (mBackspace.isPressed() && !mPendingInput.empty()) {
             mPendingInput.pop_back(); //TODO: handle cursor
             mCursorPosition--;
         }
 
-        if (mInputHandler.isPressed(Action::Enter)) {
+        if (mEnter.isPressed()) {
             Console& console = engine.console();
             console.print(std::format("> {}", mPendingInput));
             console.execute(engine, mPendingInput);

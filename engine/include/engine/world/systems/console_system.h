@@ -3,33 +3,34 @@
 #ifndef ASTERACITY_ENGINE_WORLD_SYSTEMS_CONSOLE_SYSTEM_H
 #define ASTERACITY_ENGINE_WORLD_SYSTEMS_CONSOLE_SYSTEM_H
 
-#include "engine/developer/console.h"
+#include "engine/backend/input_provider.h"
 
-#include "engine/input/input_handler.h"
+#include "engine/developer/console.h"
 
 #include "engine/world/system.h"
 
 namespace engine {
     class ConsoleSystem : public ISystem {
     public:
-        explicit ConsoleSystem(Engine& engine);
-
         void update(Engine& engine, float dt) override;
         void renderUI(Engine& engine) override;
 
     private:
-        enum class Action {
-            Backspace,
-            Enter,
-            ToggleConsole,
+        struct KeyState {
+            bool current;
+            bool previous;
 
-            Count
+            bool isPressed() const;
+
+            void update(Engine& engine, backend::Key key);
         };
-
-        InputHandler<Action, true> mInputHandler;
 
         std::string mPendingInput;
         size_t mCursorPosition = 0;
+
+        KeyState mEnter{};
+        KeyState mBackspace{};
+        KeyState mF1{};
 
         void handleInput(Engine& engine);
     };
