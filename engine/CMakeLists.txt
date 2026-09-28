@@ -184,6 +184,7 @@ set(HEADERS
     include/engine/world/components/lifetime.h
     include/engine/world/components/renderer.h
     include/engine/world/components/transform.h
+    include/engine/world/components/velocity.h
 
     include/engine/world/systems/animation_system.h
     include/engine/world/systems/camera_system.h
