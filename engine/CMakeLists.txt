@@ -117,6 +117,7 @@ set(SOURCES
     src/world/systems/camera_system.cpp
     src/world/systems/console_system.cpp
     src/world/systems/lifetime_system.cpp
+    src/world/systems/movement_system.cpp
     src/world/systems/render_systems.cpp
 
     src/world/tiles/registry.cpp
@@ -155,8 +156,6 @@ set(HEADERS
 
     include/engine/developer/console.h
 
-    include/engine/input/input_handler.h
-
     include/engine/render/camera.h
     include/engine/render/frame_controller.h
     include/engine/render/renderer.h
@@ -192,6 +191,7 @@ set(HEADERS
     include/engine/world/systems/camera_system.h
     include/engine/world/systems/console_system.h
     include/engine/world/systems/lifetime_system.h
+    include/engine/world/systems/movement_system.h
     include/engine/world/systems/render_systems.h
 
     include/engine/world/tiles/registry.h
