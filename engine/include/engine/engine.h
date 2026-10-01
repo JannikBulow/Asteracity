@@ -20,6 +20,7 @@
 #include "engine/world/systems/camera_system.h"
 #include "engine/world/systems/console_system.h"
 #include "engine/world/systems/lifetime_system.h"
+#include "engine/world/systems/movement_system.h"
 #include "engine/world/systems/render_systems.h"
 
 #include "engine/world/tiles/tile_world.h"
@@ -113,6 +114,7 @@ namespace engine {
         std::tuple<
             LifetimeSystem,
             AnimationSystem,
+            MovementSystem,
             TileRenderSystem,
             RenderSystem,
             CameraSystem,
