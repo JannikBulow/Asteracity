@@ -7,7 +7,7 @@
 
 namespace engine {
     struct Velocity {
-        math::Vec2 linear;
+        math::Vec2 linear = math::Vec2::Zero();
     };
 }
 
