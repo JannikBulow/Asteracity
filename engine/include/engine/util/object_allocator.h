@@ -85,7 +85,7 @@ namespace util {
             mSlabs = slab;
 
             for (size_t i = 0; i < ObjectsPerSlab; i++) {
-                auto* node = reinterpret_cast<Node*>(slab->storage + i + Stride);
+                auto* node = reinterpret_cast<Node*>(slab->storage + i * Stride);
                 node->next = mFree;
                 mFree = node;
             }
