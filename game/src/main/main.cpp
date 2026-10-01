@@ -8,6 +8,7 @@
 #include <engine/world/components/camera.h>
 #include <engine/world/components/renderer.h>
 #include <engine/world/components/transform.h>
+#include <engine/world/components/velocity.h>
 
 #include <engine/engine.h>
 
@@ -49,7 +50,6 @@ int main(int argc, char** argv) {
         return result;
     }});
 
-    engine::Sprite rat = engine.assetManager().loadSprite({"sprites/rat.sprite"});
     engine::Sprite black = engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::Black; });
     engine::Sprite grass1 = engine.assetManager().loadSprite({"sprites/grass_1.sprite"});
 
@@ -72,12 +72,13 @@ int main(int argc, char** argv) {
 
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::CameraComponent>(playerEntity, engine.activeScene().getActiveCamera());
-    engine::Transform& transform = world.addComponent<engine::Transform>(playerEntity);
+    world.addComponent<engine::Transform>(playerEntity);
+    auto& velocity = world.addComponent<engine::Velocity>(playerEntity);
     world.addComponent<engine::SpriteAnimator>(playerEntity, engine::Animation(testAnimation));
     world.addComponent<engine::SpriteRenderer>(playerEntity, testAnimation.getFrames().front().sprite);
 
-    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [inputSystem, &transform](engine::Engine& engine, float dt) {
-        transform.position += inputSystem->value<Actions::Move>() * (dt * 5.0f);
+    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [inputSystem, &velocity](engine::Engine& engine, float dt) {
+        velocity.linear = inputSystem->value<Actions::Move>() * 5.0f;
     });
 
      return engine.main(argc, argv);
