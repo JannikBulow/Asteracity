@@ -39,7 +39,7 @@ namespace util {
 
         int needSep = domain.ends_with(std::filesystem::path::preferred_separator) ? 0 : 1;
         size_t size = basePath.size() + domain.size() + needSep + resource.size();
-        auto path = std::make_unique<char[]>(size);
+        auto path = std::make_unique<char[]>(size + 1);
 
         memcpy(path.get(), basePath.data(), basePath.size());
         memcpy(path.get() + basePath.size(), domain.data(), domain.size());
