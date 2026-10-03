@@ -22,6 +22,27 @@ struct Actions {
     using types = std::tuple<Move>;
 };
 
+// simple tag to tell the system that the entity has movement
+struct CharacterController {
+    float speed;
+};
+
+class CharacterControllerSystem : public engine::ISystem {
+public:
+    // takes a normalized movement system, usually just provided by the input addon via something like `inputSystem->value<Actions::Move>()`
+    explicit CharacterControllerSystem(const math::Vec2& movementVector)
+        : mMovementVector(movementVector) {}
+
+    void update(engine::Engine& engine, float dt) override {
+        for (auto [entity, movement, velocity] : engine.activeScene().world().viewEntities<CharacterController, engine::Velocity>()) {
+            velocity.linear = mMovementVector * movement.speed;
+        }
+    }
+
+private:
+    const math::Vec2& mMovementVector;
+};
+
 int main(int argc, char** argv) {
     engine::Engine engine({
         .window = {
@@ -40,6 +61,8 @@ int main(int argc, char** argv) {
     auto inputSystemPtr = std::make_unique<engine::input::InputSystem<Actions>>(engine.inputProvider());
     auto* inputSystem = inputSystemPtr.get();
     engine.addSystem(std::move(inputSystemPtr));
+
+    engine.addSystem(std::make_unique<CharacterControllerSystem>(inputSystem->value<Actions::Move>()));
 
     inputSystem->bind<Actions::Move>({[](backend::IInputProvider& inputProvider) -> math::Vec2 {
         math::Vec2 result;
@@ -73,13 +96,10 @@ int main(int argc, char** argv) {
     engine::Entity playerEntity = world.createEntity();
     world.addComponent<engine::CameraComponent>(playerEntity, engine.activeScene().getActiveCamera());
     world.addComponent<engine::Transform>(playerEntity);
-    auto& velocity = world.addComponent<engine::Velocity>(playerEntity);
+    world.addComponent<engine::Velocity>(playerEntity);
     world.addComponent<engine::SpriteAnimator>(playerEntity, engine::Animation(testAnimation));
     world.addComponent<engine::SpriteRenderer>(playerEntity, testAnimation.getFrames().front().sprite);
-
-    engine.setCallback(engine::Engine::UPDATE_CALLBACK, [inputSystem, &velocity](engine::Engine& engine, float dt) {
-        velocity.linear = inputSystem->value<Actions::Move>() * 5.0f;
-    });
+    world.addComponent<CharacterController>(playerEntity, 5.0f);
 
      return engine.main(argc, argv);
 }
