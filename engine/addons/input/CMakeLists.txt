@@ -2,8 +2,7 @@ set(SOURCES
 )
 
 set(HEADERS
-    include/engine/addons/input/components.h
-    include/engine/addons/input/systems.h
+    include/engine/addons/input/system.h
     include/engine/addons/input/binding.h
     src/a.cpp
 )

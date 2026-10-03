@@ -1,6 +1,6 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#include <engine/addons/input/systems.h>
+#include <engine/addons/input/system.h>
 
 #include <engine/asset/animation.h>
 
