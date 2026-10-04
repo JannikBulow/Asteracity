@@ -1,5 +1,11 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
+#include "asteracity/character/character_controller.h"
+#include "asteracity/character/character_intent.h"
+#include "asteracity/character/character_stats.h"
+
+#include "asteracity/player/player_input.h"
+
 #include <engine/addons/input/system.h>
 
 #include <engine/asset/animation.h>
@@ -14,36 +20,9 @@
 
 #include <ranges>
 
-struct Actions {
-    struct Move {
-        using value_type = math::Vec2;
-    };
-
-    using types = std::tuple<Move>;
-};
-
-// simple tag to tell the system that the entity has movement
-struct CharacterController {
-    float speed;
-};
-
-class CharacterControllerSystem : public engine::ISystem {
-public:
-    // takes a normalized movement system, usually just provided by the input addon via something like `inputSystem->value<Actions::Move>()`
-    explicit CharacterControllerSystem(const math::Vec2& movementVector)
-        : mMovementVector(movementVector) {}
-
-    void update(engine::Engine& engine, float dt) override {
-        for (auto [entity, movement, velocity] : engine.activeScene().world().viewEntities<CharacterController, engine::Velocity>()) {
-            velocity.linear = mMovementVector * movement.speed;
-        }
-    }
-
-private:
-    const math::Vec2& mMovementVector;
-};
-
 int main(int argc, char** argv) {
+    using namespace asteracity;
+
     engine::Engine engine({
         .window = {
             .width = 100,
@@ -58,20 +37,9 @@ int main(int argc, char** argv) {
 
     engine.frameController().timer().setLimit(165);
 
-    auto inputSystemPtr = std::make_unique<engine::input::InputSystem<Actions>>(engine.inputProvider());
-    auto* inputSystem = inputSystemPtr.get();
-    engine.addSystem(std::move(inputSystemPtr));
+    engine.addSystem(std::make_unique<PlayerInputSystem>(engine, PlayerBindings<engine::input::Key>::DefaultBindings()));
 
-    engine.addSystem(std::make_unique<CharacterControllerSystem>(inputSystem->value<Actions::Move>()));
-
-    inputSystem->bind<Actions::Move>({[](backend::IInputProvider& inputProvider) -> math::Vec2 {
-        math::Vec2 result;
-        if (inputProvider.isKeyDown(backend::Key::W)) result.y += 1.0f;
-        if (inputProvider.isKeyDown(backend::Key::S)) result.y -= 1.0f;
-        if (inputProvider.isKeyDown(backend::Key::A)) result.x -= 1.0f;
-        if (inputProvider.isKeyDown(backend::Key::D)) result.x += 1.0f;
-        return result;
-    }});
+    engine.addSystem(std::make_unique<CharacterControllerSystem>());
 
     engine::Sprite black = engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::Black; });
     engine::Sprite grass1 = engine.assetManager().loadSprite({"sprites/grass_1.sprite"});
@@ -99,7 +67,9 @@ int main(int argc, char** argv) {
     world.addComponent<engine::Velocity>(playerEntity);
     world.addComponent<engine::SpriteAnimator>(playerEntity, engine::Animation(testAnimation));
     world.addComponent<engine::SpriteRenderer>(playerEntity, testAnimation.getFrames().front().sprite);
-    world.addComponent<CharacterController>(playerEntity, 5.0f);
+    world.addComponent<CharacterStats>(playerEntity, 5.0f);
+    world.addComponent<CharacterIntent>(playerEntity);
+    world.addComponent<PlayerControlled>(playerEntity);
 
      return engine.main(argc, argv);
 }

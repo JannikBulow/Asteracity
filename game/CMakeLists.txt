@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
+    src/character/character_controller.cpp
+
     src/main/main.cpp
+
+    src/player/player_input.cpp
 )
 
 set(HEADERS
+    include/asteracity/character/character_controller.h
+    include/asteracity/character/character_intent.h
+    include/asteracity/character/character_stats.h
+
+    include/asteracity/player/player_input.h
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
@@ -24,4 +33,13 @@ target_link_libraries(asteracity PRIVATE Asteracity::Engine Asteracity::Addon::I
 assetc_compile(asteracity
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets"
     OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/assets"
+)
+
+target_compile_options(asteracity PRIVATE
+    $<$<CONFIG:Debug>:-fsanitize=address,undefined>
+    $<$<CONFIG:Debug>:-fno-omit-frame-pointer>
+)
+
+target_link_options(asteracity PRIVATE
+    $<$<CONFIG:Debug>:-fsanitize=address,undefined>
 )
