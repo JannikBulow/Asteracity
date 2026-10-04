@@ -76,6 +76,9 @@ namespace engine {
         Scene& activeScene() { return *mSceneStack.back(); }
         const Scene& activeScene() const { return *mSceneStack.back(); }
 
+        World& activeWorld() { return activeScene().world(); }
+        const World& activeWorld() const { return activeScene().world(); }
+
         void pushScene(std::unique_ptr<Scene> scene);
         void popScene();
         void clearSceneStack();
