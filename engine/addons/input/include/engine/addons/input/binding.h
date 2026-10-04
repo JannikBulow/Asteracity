@@ -14,6 +14,8 @@ namespace engine::input {
 
         std::function<T(backend::IInputProvider&)> evaluate;
     };
+
+    using Key = backend::Key;
 }
 
 #endif //ASTERACITY_ENGINE_ADDONS_INPUT_BINDING_H
