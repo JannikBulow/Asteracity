@@ -1,7 +1,7 @@
 // Copyright 2026 Jannik Laugmand Bülow
 
-#ifndef ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEMS_H
-#define ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEMS_H
+#ifndef ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEM_H
+#define ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEM_H
 
 #include "engine/addons/input/binding.h"
 
@@ -152,4 +152,4 @@ namespace engine::input {
     };
 }
 
-#endif //ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEMS_H
+#endif //ASTERACITY_ENGINE_ADDONS_INPUT_SYSTEM_H
