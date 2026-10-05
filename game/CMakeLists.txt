@@ -14,6 +14,7 @@ set(HEADERS
     include/asteracity/character/character_stats.h
 
     include/asteracity/player/player_input.h
+    include/asteracity/tile/registry.h
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
