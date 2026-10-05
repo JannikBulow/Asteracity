@@ -13,6 +13,9 @@ namespace engine {
 
         const TileRegistry& registry() const { return mRegistry; }
 
+        int getWidth() const { return mMap.getWidth(); }
+        int getHeight() const { return mMap.getHeight(); }
+
         Tile& get(math::Vec2I worldPos);
         const Tile& get(math::Vec2I worldPos) const;
 
