@@ -8,6 +8,8 @@ set(SOURCES
     src/player/player.cpp
     src/player/player_input.cpp
 
+    src/scenes/test_scene.cpp
+
     src/game.cpp
 )
 
@@ -18,7 +20,10 @@ set(HEADERS
 
     include/asteracity/player/player.h
     include/asteracity/player/player_input.h
+
     include/asteracity/tile/registry.h
+
+    include/asteracity/scenes/test_scene.h
 
     include/asteracity/game.h
 )
