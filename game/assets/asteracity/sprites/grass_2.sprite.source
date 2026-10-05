@@ -1,9 +1,9 @@
 version 1
 
-sprite "grass_1"
+sprite "grass_2"
 
 texture resource("images/grass.png")
 
 size 1 1
 
-uv 0 32 0 32
+uv 32 64 0 32
