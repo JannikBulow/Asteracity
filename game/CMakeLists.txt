@@ -6,6 +6,8 @@ set(SOURCES
     src/main/main.cpp
 
     src/player/player_input.cpp
+
+    src/game.cpp
 )
 
 set(HEADERS
@@ -15,6 +17,8 @@ set(HEADERS
 
     include/asteracity/player/player_input.h
     include/asteracity/tile/registry.h
+
+    include/asteracity/game.h
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
