@@ -5,6 +5,7 @@ set(SOURCES
 
     src/main/main.cpp
 
+    src/player/player.cpp
     src/player/player_input.cpp
 
     src/game.cpp
@@ -15,6 +16,7 @@ set(HEADERS
     include/asteracity/character/character_intent.h
     include/asteracity/character/character_stats.h
 
+    include/asteracity/player/player.h
     include/asteracity/player/player_input.h
     include/asteracity/tile/registry.h
 
