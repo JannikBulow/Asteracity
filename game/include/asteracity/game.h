@@ -15,6 +15,8 @@ namespace asteracity {
         engine::Sprite getStaticColor(math::Color color) const;
         engine::TileID getRandomGrassTile() const;
 
+        engine::AnimationClip& bushClip() { return mBushClip; }
+
         void registerSystems();
         void registerTiles();
 
@@ -22,6 +24,8 @@ namespace asteracity {
         engine::Engine& mEngine;
 
         engine::Sprite mStaticColor; // 1x1 white sprite to be cloned
+
+        engine::AnimationClip mBushClip;
     };
 }
 

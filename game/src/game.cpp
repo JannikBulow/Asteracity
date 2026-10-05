@@ -11,7 +11,8 @@
 namespace asteracity {
     Game::Game(engine::Engine& engine)
         : mEngine(engine)
-        , mStaticColor(engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::White; })) {
+        , mStaticColor(engine.assetManager().generateSprite({1, 1}, 1, 1, engine::ImageFormat::RGB8, [](int x, int y) { return math::Color::White; }))
+        , mBushClip(engine.assetManager().loadAnimation({"animations/bush.animation"})) {
         srand(time(nullptr));
     }
 

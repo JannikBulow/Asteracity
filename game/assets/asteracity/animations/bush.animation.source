@@ -1,0 +1,7 @@
+version 1
+
+animation "bush"
+
+from resource("images/bush.png") 1 2 0.7
+
+size 1 1
