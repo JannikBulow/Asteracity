@@ -8,6 +8,7 @@
 namespace engine {
     class TileRenderSystem : public ISystem {
     public:
+        void update(Engine& engine, float dt) override;
         void render(Engine& engine) override;
     };
 

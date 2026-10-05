@@ -11,9 +11,14 @@ namespace engine {
         void registerTile(TileID assignedID, TileDefinition definition);
 
         // safe access
+        TileDefinition& get(TileID id);
         const TileDefinition& get(TileID id) const;
 
         // fast access
+        TileDefinition& operator[](TileID id) {
+            return *mDefinitions[id];
+        }
+
         const TileDefinition& operator[](TileID id) const {
             return *mDefinitions[id];
         }

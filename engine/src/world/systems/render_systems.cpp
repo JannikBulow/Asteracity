@@ -8,6 +8,34 @@
 #include "engine/engine.h"
 
 namespace engine {
+    void TileRenderSystem::update(Engine& engine, float dt) {
+        Scene& activeScene = engine.activeScene();
+        Camera& activeCamera = activeScene.activeCamera();
+
+        math::Rect bounds = activeCamera.worldBounds(math::Vec2(engine.window().getFramebufferSize()));
+
+        int leftTile = floor(bounds.left);
+        int rightTile = ceil(bounds.right);
+        int bottomTile = floor(bounds.bottom);
+        int topTile = ceil(bounds.top);
+
+        for (int y = bottomTile; y <= topTile; y++) {
+            for (int x = leftTile; x <= rightTile; x++) {
+                Tile tile = activeScene.tileWorld().get({x, y});
+                TileDefinition& definition = engine.tileRegistry()[tile.id];
+
+                if (definition.isAnimation()) {
+                    definition.animation->update(dt);
+
+                    const Sprite& sprite = definition.animation->getCurrentFrame().sprite;
+                    if (definition.sprite != sprite) {
+                        definition.sprite = sprite;
+                    }
+                }
+            }
+        }
+    }
+
     void TileRenderSystem::render(Engine& engine) {
         Scene& activeScene = engine.activeScene();
         Camera& activeCamera = activeScene.activeCamera();

@@ -17,7 +17,7 @@ namespace engine {
             if (auto* renderer = world.getComponent<SpriteRenderer>(entity)) {
                 const Sprite& sprite = animator.animation.getCurrentFrame().sprite;
                 if (renderer->sprite != sprite) {
-                    renderer->sprite = animator.animation.getCurrentFrame().sprite;
+                    renderer->sprite = sprite;
                 }
             }
         }

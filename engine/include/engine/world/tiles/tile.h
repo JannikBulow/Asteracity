@@ -3,6 +3,7 @@
 #ifndef ASTERACITY_ENGINE_WORLD_TILES_TILE_H
 #define ASTERACITY_ENGINE_WORLD_TILES_TILE_H
 
+#include "engine/asset/animation.h"
 #include "engine/asset/sprite.h"
 
 #include <cstdint>
@@ -15,6 +16,9 @@ namespace engine {
 
     struct TileDefinition {
         Sprite sprite;
+        std::optional<Animation> animation = std::nullopt;
+
+        bool isAnimation() const { return animation.has_value(); }
     };
 
     using TileID = uint32_t;

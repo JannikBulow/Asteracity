@@ -11,6 +11,11 @@ namespace engine {
         mDefinitions[assignedID] = std::move(definition);
     }
 
+    TileDefinition& TileRegistry::get(TileID id) {
+        if (!mDefinitions[id].has_value()) throw util::GameException();
+        return *mDefinitions[id];
+    }
+
     const TileDefinition& TileRegistry::get(TileID id) const {
         if (!mDefinitions[id].has_value()) throw util::GameException();
         return *mDefinitions[id];
