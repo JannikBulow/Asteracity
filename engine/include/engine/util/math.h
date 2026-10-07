@@ -233,6 +233,13 @@ namespace math {
 
         constexpr RectT() = default;
         constexpr RectT(T left, T right, T top, T bottom) : left(left), right(right), top(top), bottom(bottom) {}
+        constexpr RectT(Vec2T<T> position, Vec2T<T> size) {
+            Vec2T<T> halfSize = size / T(2);
+            left = position.x - halfSize.x;
+            right = position.x + halfSize.x;
+            top = position.y + halfSize.y;
+            bottom = position.y - halfSize.y;
+        }
 
         template<class U>
         explicit constexpr operator RectT<U>() const {
@@ -267,12 +274,28 @@ namespace math {
             return {width(), height()};
         }
 
+        constexpr Vec2T<T> halfSize() const {
+            return size() / T(2);
+        }
+
         constexpr T width() const {
             return right - left;
         }
 
         constexpr T height() const {
             return top - bottom;
+        }
+
+        constexpr Vec2T<T> getOverlap(const RectT& other) const {
+            const auto& a = *this;
+            const auto& b = other;
+            float overlapX = std::min(a.right, b.right) - std::max(a.left, b.left);
+            float overlapY = std::min(a.top, b.top) - std::max(a.bottom, b.bottom);
+            return {overlapX, overlapY};
+        }
+
+        constexpr RectT translate(Vec2T<T> position) {
+            return {left + position.x, right + position.x, top + position.y, bottom + position.y};
         }
     };
 

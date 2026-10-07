@@ -20,7 +20,7 @@ namespace asteracity {
         : InputSystem(engine.inputProvider())
         , mKeyboardBindings(keyboardBindings) {
         bind<PlayerActions::Move>({[this](backend::IInputProvider& inputProvider) -> math::Vec2 {
-            math::Vec2 result;
+            math::Vec2 result = math::Vec2::Zero();
             if (inputProvider.isKeyDown(mKeyboardBindings.moveUp)) result.y += 1.0f;
             if (inputProvider.isKeyDown(mKeyboardBindings.moveDown)) result.y -= 1.0f;
             if (inputProvider.isKeyDown(mKeyboardBindings.moveLeft)) result.x -= 1.0f;

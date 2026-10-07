@@ -5,6 +5,7 @@
 #include "asteracity/tile/registry.h"
 
 #include <engine/world/components/animator.h>
+#include <engine/world/components/collider.h>
 #include <engine/world/components/renderer.h>
 #include <engine/world/components/transform.h>
 
@@ -26,6 +27,7 @@ namespace asteracity {
                     engine::World& world = scene->world();
                     engine::Entity entity = world.createEntity();
                     world.addComponent<engine::Transform>(entity, engine::Transform{.position = {static_cast<float>(x), static_cast<float>(y)}});
+                    world.addComponent<engine::Collider>(entity);
                     world.addComponent<engine::SpriteAnimator>(entity, engine::Animation(game.bushClip()));
                     world.addComponent<engine::SpriteRenderer>(entity, game.bushClip().getFrames().front().sprite);
                 }

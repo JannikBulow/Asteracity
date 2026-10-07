@@ -115,6 +115,7 @@ set(SOURCES
 
     src/world/systems/animation_system.cpp
     src/world/systems/camera_system.cpp
+    src/world/systems/collision_system.cpp
     src/world/systems/console_system.cpp
     src/world/systems/lifetime_system.cpp
     src/world/systems/movement_system.cpp
@@ -182,13 +183,15 @@ set(HEADERS
 
     include/engine/world/components/animator.h
     include/engine/world/components/camera.h
+    include/engine/world/components/collider.h
     include/engine/world/components/lifetime.h
     include/engine/world/components/renderer.h
+    include/engine/world/components/rigid_body.h
     include/engine/world/components/transform.h
-    include/engine/world/components/velocity.h
 
     include/engine/world/systems/animation_system.h
     include/engine/world/systems/camera_system.h
+    include/engine/world/systems/collision_system.h
     include/engine/world/systems/console_system.h
     include/engine/world/systems/lifetime_system.h
     include/engine/world/systems/movement_system.h

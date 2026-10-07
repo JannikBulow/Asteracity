@@ -18,6 +18,7 @@
 
 #include "engine/world/systems/animation_system.h"
 #include "engine/world/systems/camera_system.h"
+#include "engine/world/systems/collision_system.h"
 #include "engine/world/systems/console_system.h"
 #include "engine/world/systems/lifetime_system.h"
 #include "engine/world/systems/movement_system.h"
@@ -118,6 +119,7 @@ namespace engine {
             LifetimeSystem,
             AnimationSystem,
             MovementSystem,
+            CollisionSystem,
             TileRenderSystem,
             RenderSystem,
             CameraSystem,
